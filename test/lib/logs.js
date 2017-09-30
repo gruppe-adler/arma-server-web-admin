@@ -18,7 +18,7 @@ describe('Logs', function () {
 
   describe('generateLogFileName()', function () {
     it('should generate valid file name', function () {
-      Logs.generateLogFileName().should.eql('arma3server_2015-10-21_19-28-32.log')
+      Logs.generateDefaultLogFileName().should.eql('arma3server_2015-10-21_19-28-32.log')
     })
   })
 
