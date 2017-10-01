@@ -6,6 +6,9 @@ var serveStatic = require('serve-static')
 
 var config = require('./config')
 var setupBasicAuth = require('./lib/setup-basic-auth')
+if (config.bunyanConfig) {
+  var bunyanConfig = require('bunyan-config')(config.bunyanConfig);
+}
 var Manager = require('./lib/manager')
 var Missions = require('./lib/missions')
 var Mods = require('./lib/mods')
