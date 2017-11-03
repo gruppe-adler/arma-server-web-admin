@@ -6,17 +6,18 @@
     <%-name%>
   <% } %>
 </td>
+<td>
+  <span title="created: <%-birthtime%>, changed: <%-mtime%>"><%-mtime%></span>
+</td>
 <td style="text-align: right; white-space: nowrap;">
   <%-formattedSize%>
 </td>
-<td>
+<td style="text-align: right">
   <a class="btn btn-primary btn-xs" href="/api/logs/<%-name%>/download">
     <span class="glyphicon glyphicon-download"></span>
     Download
   </a>
-</td>
-<td>
-  <a class="btn btn-danger btn-xs destroy ladda-button pull-right" data-style="expand-left">
+  <a class="btn btn-danger btn-xs destroy ladda-button" data-style="expand-left">
     <span class="glyphicon glyphicon-trash"></span>
     Delete
   </a>
