@@ -14,8 +14,8 @@ module.exports = function (logsManager) {
   })
 
   router.delete('/:log', function (req, res) {
-    var filename = req.params.log
-    logsManager.delete(filename, function (err) {
+    var id = req.params.log
+    logsManager.delete(id, function (err) {
       if (err) {
         res.status(500).send(err)
       } else {
