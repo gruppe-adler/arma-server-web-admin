@@ -25,10 +25,10 @@ module.exports = function (logsManager) {
   })
 
   router.get('/:log/:mode', function (req, res) {
-    var requestedFilename = req.params.log
+    var id = req.params.log
     var mode = req.params.mode === 'view' ? 'view' : 'download'
 
-    logsManager.getLogFile(requestedFilename, function (err, file) {
+    logsManager.getLogFile(id, function (err, file) {
       if (err) {
         res.status(500).send(err)
       } else {
