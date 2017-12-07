@@ -10,6 +10,7 @@ module.exports = {
   path: 'path-to-arma3-directory',
   port: 3000,
   host: '0.0.0.0', // Can be either an IP or a Hostname
+  rptAnalyzers: ['player-connected', 'server-started']
   type: 'linux', // Can be either linux, windows or wine
   parameters: [ // Additional startup parameters used by all servers
     '-noSound',
