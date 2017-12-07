@@ -9,10 +9,11 @@ define(function (require) {
   return Backbone.Model.extend({
     defaults: {
       name: '',
+      subdir: '',
       formattedSize: '0 B',
       size: 0,
     },
-    idAttribute: 'name',
+    idAttribute: 'id',
   });
   
 });

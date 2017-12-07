@@ -8,7 +8,7 @@ define(function (require) {
       Log                 = require('app/models/log');
 
   return Backbone.Collection.extend({
-    comparator: 'name',
+    comparator: 'id',
     model: Log,
     url: '/api/logs/'
   });

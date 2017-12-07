@@ -25,6 +25,7 @@
     "express-basic-auth": "^1.0.1",
     "filesize": "^3.1.0",
     "fs.extra": "~1.3.2",
+    "glob": "^7.1.2",
     "gamedig": "0.2.25",
     "lodash": "^3.6.0",
     "multer": "^1.3.0",
