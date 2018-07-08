@@ -8,6 +8,13 @@ let connectedPlayers = new promclient.Gauge({
     labelNames: ['game', 'title', 'hostname', 'port']
 })
 
+let missionMaxPlayers = new promclient.Gauge({
+    name: 'arma3_players_mission_maxplayers',
+    help: 'Maximum possible number of players in current scenario',
+    labelNames: ['game', 'title', 'hostname', 'port']
+})
+
+
 let configuredServers = new promclient.Gauge({
     name: 'arma3_servers_configured',
     help: 'Number of servers configured'
@@ -44,7 +51,10 @@ module.exports = function (manager) { // server manager
         manager.getServers().filter(function (server) {
             return !!server.instance
         }).forEach(function (server) {
-            connectedPlayers.labels(server.game, server.title, server.hostname, server.port).set((server.players || []).length)
+            if (server.state) {
+                connectedPlayers.labels(server.game, server.title, server.hostname, server.port).set((server.state.players || []).length)
+                missionMaxPlayers.labels(server.game, server.title, server.hostname, server.port).set(server.state.maxplayers)
+            }
             runningHCs.labels(server.game, server.title, server.hostname, server.port).set(server.headlessClientInstances.length)
         })
         configuredServers.set(manager.getServers().length)
