@@ -14,11 +14,13 @@ define(function (require) {
       Logs            = require('app/collections/logs'),
       Missions        = require('app/collections/missions'),
       Mods            = require('app/collections/mods'),
+      Settings        = require('app/models/settings'),
       Servers         = require('app/collections/servers'),
 
       $body = $('body'),
       missions = new Missions(),
       mods = new Mods(),
+      settings = new Settings(),
       servers = new Servers(),
       layoutView = new LayoutView({el: $body}).render();
 
@@ -33,23 +35,27 @@ define(function (require) {
     },
 
     initialize: function () {
-      layoutView.navigation.show(new NavigationView({servers: servers}));
-      sweetAlertInitialize();
-      missions.fetch();
+      layoutView.navigation.show(new NavigationView({settings: settings, servers: servers}));
 
       var initialized = false;
 
       var socket = io.connect();
+      socket.on('missions', function (_missions) {
+        missions.set(_missions);
+      });
       socket.on('mods', function (_mods) {
-        mods.set(_mods).sort();
+        mods.set(_mods);
       });
       socket.on('servers', function (_servers) {
-        servers.set(_servers).sort();
+        servers.set(_servers);
 
         if (!initialized) {
           initialized = true;
           Backbone.history.start();
         }
+      });
+      socket.on('settings', function (_settings) {
+        settings.set(_settings);
       });
     },
 

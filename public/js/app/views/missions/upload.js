@@ -18,11 +18,6 @@ define(function (require) {
       'click form button': 'submit',
     },
 
-    initialize: function (options) {
-      this.missions = options.missions;
-      this.model = new Mission();
-    },
-
     submit: function () {
       var self = this;
       var $form = this.$el.find('form');
@@ -32,15 +27,15 @@ define(function (require) {
       laddaBtn.start();
 
       $.ajax("/api/missions", {
-        files: $form.find(":file"),
-        iframe: true
-      }).complete(function(data) {
-        self.missions.fetch({success : function () {
+        success: function(data) {
           laddaBtn.stop();
           self.render();
-        }});
-      }).error(function() {
-        laddaBtn.stop();
+        },
+        error: function () {
+          laddaBtn.stop();
+        },
+        files: $form.find(":file"),
+        iframe: true
       });
     },
   });

@@ -17,11 +17,10 @@ define(function (require) {
     template: template,
 
     events: {
-      "click .destroy": "destroy",
-      "click .update": "update",
+      "click .destroy": "deleteMod",
     },
 
-    destroy: function (event) {
+    deleteMod: function (event) {
       var self = this;
       sweetAlert({
         title: "Are you sure?",
@@ -33,26 +32,6 @@ define(function (require) {
       },
       function(){
         self.model.destroy();
-      });
-    },
-
-    update: function (event) {
-      var self = this;
-      event.preventDefault();
-
-      var $updateBtn = this.$el.find(".update");
-      var laddaBtn = Ladda.create($updateBtn.get(0));
-      laddaBtn.start();
-
-      $.ajax({
-        url: "/api/mods/" + this.model.get('name'),
-        type: 'PUT',
-        success: function (resp) {
-          laddaBtn.stop();
-        },
-        error: function (resp) {
-          laddaBtn.stop();
-        },
       });
     },
   });

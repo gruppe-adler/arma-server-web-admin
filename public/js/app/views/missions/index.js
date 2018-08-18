@@ -11,7 +11,7 @@ define(function (require) {
       ListView            = require('app/views/missions/list'),
       tpl                 = require('text!tpl/missions/index.html');
 
-  return Marionette.Layout.extend({
+  return Marionette.LayoutView.extend({
     template: _.template(tpl),
 
     regions: {
@@ -20,10 +20,28 @@ define(function (require) {
       listView: "#list",
     },
 
+    events: {
+      "click #refresh": "refresh",
+    },
+
     onRender: function() {
-      this.uploadView.show(new UploadView({missions: this.options.missions}));
-      this.workshopView.show(new WorkshopView({missions: this.options.missions}));
+      this.uploadView.show(new UploadView());
+      this.workshopView.show(new WorkshopView());
       this.listView.show(new ListView({collection: this.options.missions}));
+    },
+
+    refresh: function (event) {
+      event.preventDefault();
+      $.ajax({
+        url: "/api/missions/refresh",
+        type: 'POST',
+        success: function (resp) {
+
+        },
+        error: function (resp) {
+
+        },
+      });
     },
   });
 
