@@ -2,6 +2,8 @@ let express = require('express')
 let promclient = require('prom-client');
 let serverLogWriter = require('../lib/server-log-writer')
 
+promclient.collectDefaultMetrics({timeout: 5000});
+
 let connectedPlayers = new promclient.Gauge({
     name: 'arma3_players_connected',
     help: 'Number of connected players on an arma3 server',
