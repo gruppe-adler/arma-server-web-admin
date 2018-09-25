@@ -16,5 +16,8 @@ describe('ServerLogWriter', function () {
     it('prefixes single lines without newline', function() {
         ServerLogWriter.prefixLines('X ', new Buffer('foo')).should.eql('X foo')
     })
+    it('prefixes single lines without newline', function() {
+        ServerLogWriter.prefixLines('X ', new Buffer('foo')).should.eql('X foo')
+    })
   })
 })
