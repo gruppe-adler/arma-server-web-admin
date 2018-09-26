@@ -28,7 +28,7 @@ describe('Logs', function () {
 
   describe('generateLogFilePath()', function () {
     it('should generate valid file path', function () {
-      logs.generateLogFilePath('server').should.eql('/tmp/logs/arma3_server_2015-10-21_19-28-32.log')
+      logs.generateLogFilePath('foodir', 'server').should.eql('/tmp/logs/foodir/arma3_server_2015-10-21_19-28-32.log')
     })
   })
 })
