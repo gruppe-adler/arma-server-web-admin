@@ -1,6 +1,5 @@
 require('should')
 
-var stream = require('stream')
 var EventEmitter = require('events').EventEmitter
 
 var StreamFullLineDecorator = require('../../lib/stream-full-line-decorator')
