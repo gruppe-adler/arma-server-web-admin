@@ -1,4 +1,6 @@
+var $ = require('jquery')
 var _ = require('underscore')
+var Ladda = require('ladda')
 var Marionette = require('marionette')
 var sweetAlert = require('sweet-alert')
 
@@ -11,6 +13,7 @@ module.exports = Marionette.ItemView.extend({
   template: template,
 
   events: {
+    'click .install': 'installMod',
     'click .destroy': 'deleteMod'
   },
 
@@ -43,6 +46,32 @@ module.exports = Marionette.ItemView.extend({
       link: link,
       title: title
     }
+  },
+
+  installMod: function (event) {
+    var self = this
+    event.preventDefault()
+
+    this.laddaBtn = Ladda.create(this.$el.find('.ladda-button').get(0))
+    this.laddaBtn.start()
+    this.$el.find('.ladda-button').addClass('disabled')
+
+    $.ajax({
+      url: '/api/mods/',
+      type: 'POST',
+      data: {
+        id: this.model.get('id')
+      },
+      dataType: 'json',
+      success: function (resp) {
+        self.laddaBtn.stop()
+        self.$el.find('.ladda-button').removeClass('disabled')
+      },
+      error: function (resp) {
+        self.laddaBtn.stop()
+        self.$el.find('.ladda-button').removeClass('disabled')
+      }
+    })
   },
 
   deleteMod: function (event) {

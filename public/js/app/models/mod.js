@@ -6,6 +6,7 @@ module.exports = Backbone.Model.extend({
     downloading: false,
     formattedSize: '',
     name: '',
+    needsUpdate: false,
     path: ''
   },
   idAttribute: 'id',
