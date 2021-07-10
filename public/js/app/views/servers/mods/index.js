@@ -52,10 +52,13 @@ module.exports = ModsView.extend({
   },
 
   serverMods: function () {
+    var mods = this.options.mods
     return this.model.get('mods')
-      .map(function (mod) {
+      .map(function (id) {
+        var mod = mods.get(id)
         return {
-          name: mod
+          id: id,
+          name: mod ? mod.get('name') : id
         }
       })
   },
@@ -69,7 +72,7 @@ module.exports = ModsView.extend({
     return {
       mods: this.selectedModsCollection.toJSON()
         .map(function (mod) {
-          return mod.name
+          return mod.id
         })
     }
   }

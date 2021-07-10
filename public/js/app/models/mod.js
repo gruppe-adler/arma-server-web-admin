@@ -2,8 +2,12 @@ var Backbone = require('backbone')
 
 module.exports = Backbone.Model.extend({
   defaults: {
-    name: ''
+    id: '',
+    downloading: false,
+    formattedSize: '',
+    name: '',
+    path: ''
   },
-  idAttribute: 'name',
+  idAttribute: 'id',
   urlRoot: '/api/mods/'
 })

@@ -14,6 +14,10 @@ module.exports = Marionette.ItemView.extend({
     'click .destroy': 'deleteMod'
   },
 
+  modelEvents: {
+    change: 'render'
+  },
+
   templateHelpers: function () {
     var modFile = this.model.get('modFile')
     var steamMeta = this.model.get('steamMeta')

@@ -1,4 +1,5 @@
 var express = require('express')
+var fs = require('fs')
 var bodyParser = require('body-parser')
 var morgan = require('morgan')
 var path = require('path')
@@ -11,7 +12,7 @@ var config = require('./config')
 var webpackConfig = require('./webpack.config')
 var Manager = require('./lib/manager')
 var Missions = require('./lib/missions')
-var Mods = require('./lib/mods')
+var SteamMods = require('./lib/steam_mods')
 var Logs = require('./lib/logs')
 var Settings = require('./lib/settings')
 const requiresRole = require('./lib/auth')
@@ -45,10 +46,37 @@ app.get('/api/user', function (req, res) {
   })
 })
 
+/*
+Workaround for Steam Workshop with Linux Arma server
+
+Absolute paths are not supported.
+Create symlink in Arma folder to Workshop folder.
+Rewrite Workshop mods to use relative path to symlinked folder instead.
+*/
+if (config.type === 'linux' && config.steam && config.steam.path) {
+  var tempWorkshopFolder = path.join(config.path, 'workshop')
+  try {
+    var stat = fs.lstatSync(tempWorkshopFolder)
+    if (!stat.isSymbolicLink()) {
+      console.error('Please remove workshop folder from Arma directory manually and restart application')
+      process.exit(1)
+    }
+    fs.unlinkSync(tempWorkshopFolder)
+  } catch (err) {
+    if (err.code !== 'ENOENT') {
+      console.error('Something went wrong when creating workaround for workshop')
+      console.error(err)
+      process.exit(1)
+    }
+  }
+
+  fs.symlinkSync(config.steam.path, tempWorkshopFolder)
+}
+
 var logs = new Logs(config)
 
 var missions = new Missions(config)
-var mods = new Mods(config)
+var mods = new SteamMods(config)
 mods.updateMods()
 
 var manager = new Manager(config, logs, mods)
