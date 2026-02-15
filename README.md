@@ -52,6 +52,7 @@ modsPath | Path where game mods are stored. Leave empty to use game directory
 parameters | Extra startup parameters added to servers and headless clients
 serverMods | Mods that always and only will be used by the game servers
 auth | If both username and password is set, HTTP Basic Auth will be used
+sso | If set, SSO authentication using [sso.gruppe-adler.de](https://github.com/gruppe-adler/sso.gruppe-adler.de) will be used. Expects `url` and `cookieName` properties
 prefix | Text prepended to all game servers name
 suffix | Text appended to all game servers name
 

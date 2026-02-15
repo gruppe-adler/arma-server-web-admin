@@ -19,6 +19,10 @@ module.exports = {
     username: '', // Username for HTTP Basic Auth
     password: '', // Password for HTTP Basic Auth
   },
+  // sso: { // SSO authentication using sso.gruppe-adler.de. If set, requests are validated against the SSO service cookie.
+  //   url: 'https://sso.gruppe-adler.de', // URL of the SSO service
+  //   cookieName: 'gruppe-adler-sso-token', // Name of the SSO cookie
+  // },
   prefix: "", // Prefix to all server names
   suffix: "", // Suffix to all server names
   logFormat: "dev", // expressjs/morgan log format
