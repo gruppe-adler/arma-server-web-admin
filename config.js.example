@@ -22,4 +22,17 @@ module.exports = {
   prefix: "", // Prefix to all server names
   suffix: "", // Suffix to all server names
   logFormat: "dev", // expressjs/morgan log format
+  ssoConfig: {
+    issuerBaseURL: "https://kc.gruppe-adler.de/realms/grad",
+    baseURL: "http://localhost:2001",
+    clientID: "arma-swa-dev",
+    clientSecret: "secret",
+    secret: "a-long-random-string-at-least-32-chars",
+    authRequired: true,
+    idpLogout: true,
+    authorizationParams: {
+      response_type: "code",
+      scope: "openid profile email",
+    },
+  },
 };

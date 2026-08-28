@@ -19,7 +19,19 @@ var app = express()
 var server = require('http').Server(app)
 var io = require('socket.io')(server)
 
-setupBasicAuth(config, app)
+app.get('/favicon.ico', function (req, res) {
+  res.sendFile(path.join(__dirname, 'public', 'favicon.ico'))
+})
+
+if (config.ssoConfig) {
+  const { auth } = require("express-openid-connect");
+  app.use(auth(config.ssoConfig));
+
+  const requiresRole = require("./lib/auth");
+  app.use(requiresRole("adler"));
+} else {
+  setupBasicAuth(config, app);
+}
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -28,6 +40,18 @@ morgan.token('user', function (req) { return req.auth ? req.auth.user : 'anon' }
 app.use(morgan(config.logFormat || 'dev', { stream: config.logStream || process.stdout }))
 
 app.use(serveStatic(path.join(__dirname, 'public')))
+
+app.get("/api/user", function (req, res) {
+  var user = req.oidc && req.oidc.user;
+  var username =
+    user && (user.preferred_username || user.username || user.name);
+
+  res.json({
+    username: username || (req.auth && req.auth.user) || "User",
+    avatar: user.picture,
+  });
+});
+
 
 var logs = new Logs(config)
 
