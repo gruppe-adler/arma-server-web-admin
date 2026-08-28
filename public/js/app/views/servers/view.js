@@ -71,6 +71,15 @@ module.exports = Marionette.LayoutView.extend({
       return
     }
 
+    if (data.title.includes('+')) {
+      sweetAlert({
+        title: 'Error',
+        text: 'Gehts dir gut? Synch meinte doch, dass er dich heimsuchen wird, wenn du ein Plus im Titel verwendest. 🙄',
+        type: 'error'
+      })
+      return
+    }
+
     _.extend(data, this.missionsView.currentView.serialize())
     _.extend(data, this.modsView.currentView.serialize())
     _.extend(data, this.parametersView.currentView.serialize())

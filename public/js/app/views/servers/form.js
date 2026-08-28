@@ -48,6 +48,15 @@ module.exports = Marionette.ItemView.extend({
       return
     }
 
+    if (data.title.includes('+')) {
+      sweetAlert({
+        title: 'Error',
+        text: 'Gehts dir gut? Synch meinte doch, dass er dich heimsuchen wird, wenn du ein Plus im Titel verwendest. 🙄',
+        type: 'error'
+      })
+      return
+    }
+
     this.model.set(data)
 
     var self = this
