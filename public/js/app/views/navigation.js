@@ -29,7 +29,7 @@ module.exports = Marionette.ItemView.extend({
     this.servers = options.servers
     this.serversListView = new ServersListView({ collection: this.servers })
     Backbone.history.on('route', this.render)
-    this.user = 'User'
+    this.user = 'Unknown User'
     this.avatar = ''
     this.loadUser()
   },
