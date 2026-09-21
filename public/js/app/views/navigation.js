@@ -48,7 +48,7 @@ module.exports = Marionette.ItemView.extend({
 
   loadUser: function () {
     $.getJSON('/api/user').done(function (user) {
-      this.user = user.username || 'User'
+      this.user = user.username || 'Unknown User'
       this.avatar = user.avatar || ''
       this.renderUser()
     }.bind(this))
