@@ -42,12 +42,11 @@ app.use(morgan(config.logFormat || 'dev', { stream: config.logStream || process.
 app.use(serveStatic(path.join(__dirname, 'public')))
 
 app.get("/api/user", function (req, res) {
-  var user = req.oidc && req.oidc.user;
-  var username =
-    user && (user.preferred_username || user.username || user.name);
-
+  const user = req.oidc?.user;
+  const username = user?.preferred_username || user?.username || user?.name  || req.auth?.user || "User";
+  
   res.json({
-    username: username || (req.auth && req.auth.user) || "User",
+    username,
     avatar: user.picture,
   });
 });
