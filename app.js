@@ -25,7 +25,7 @@ app.get('/favicon.ico', function (req, res) {
 
 if (config.ssoConfig) {
   const { auth } = require("express-openid-connect");
-  app.use(auth(config.ssoConfig));
+  app.use(auth({ ...config.ssoConfig,  idpLogout: true }));
 
   const requiresRole = require("./lib/auth");
   app.use(requiresRole("adler"));
