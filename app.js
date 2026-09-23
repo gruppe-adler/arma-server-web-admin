@@ -5,21 +5,27 @@ var path = require('path')
 var serveStatic = require('serve-static')
 var webpack = require('webpack')
 var webpackMiddleware = require('webpack-dev-middleware')
+const { auth } = require('express-openid-connect')
 
 var config = require('./config')
 var webpackConfig = require('./webpack.config')
-var setupBasicAuth = require('./lib/setup-basic-auth')
 var Manager = require('./lib/manager')
 var Missions = require('./lib/missions')
 var Mods = require('./lib/mods')
 var Logs = require('./lib/logs')
 var Settings = require('./lib/settings')
+const requiresRole = require('./lib/auth')
 
 var app = express()
 var server = require('http').Server(app)
 var io = require('socket.io')(server)
 
-setupBasicAuth(config, app)
+app.get('/favicon.ico', function (req, res) {
+  res.sendFile(path.join(__dirname, 'public', 'favicon.ico'))
+})
+
+app.use(auth({ ...config.ssoConfig, idpLogout: true }))
+app.use(requiresRole(config.requiredRole))
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -28,6 +34,16 @@ morgan.token('user', function (req) { return req.auth ? req.auth.user : 'anon' }
 app.use(morgan(config.logFormat || 'dev', { stream: config.logStream || process.stdout }))
 
 app.use(serveStatic(path.join(__dirname, 'public')))
+
+app.get('/api/user', function (req, res) {
+  const user = req.oidc?.user
+  const username = user?.preferred_username || user?.username || user?.name || req.auth?.user || 'Unknown User'
+
+  res.json({
+    username,
+    avatar: user?.picture
+  })
+})
 
 var logs = new Logs(config)
 

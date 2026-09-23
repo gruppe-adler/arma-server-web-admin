@@ -12,3 +12,34 @@ body {
 .text-nowrap {
   white-space: nowrap;
 }
+
+.user-menu-toggle {
+  display: flex !important;
+  height: 50px;
+  box-sizing: border-box;
+  padding-top: 13px !important;
+  padding-bottom: 13px !important;
+  align-items: center;
+  gap: 6px;
+}
+
+.user-avatar {
+  display: inline-flex;
+  width: 24px;
+  height: 24px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #337ab7;
+  color: #fff;
+  font-weight: bold;
+}
+
+img.user-avatar {
+  object-fit: cover;
+}
+
+.user-menu-name {
+  padding: 3px 20px;
+  font-weight: bold;
+}

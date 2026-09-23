@@ -47,3 +47,4 @@ config.js
 servers.json
 
 logfile.txt
+.vscode/*
