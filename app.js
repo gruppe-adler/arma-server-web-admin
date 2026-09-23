@@ -24,8 +24,8 @@ app.get('/favicon.ico', function (req, res) {
   res.sendFile(path.join(__dirname, 'public', 'favicon.ico'))
 })
 
-app.use(auth({ ...config.ssoConfig, idpLogout: true }));
-app.use(requiresRole(config.requiredRole));
+app.use(auth({ ...config.ssoConfig, idpLogout: true }))
+app.use(requiresRole(config.requiredRole))
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -35,16 +35,15 @@ app.use(morgan(config.logFormat || 'dev', { stream: config.logStream || process.
 
 app.use(serveStatic(path.join(__dirname, 'public')))
 
-app.get("/api/user", function (req, res) {
-  const user = req.oidc?.user;
-  const username = user?.preferred_username || user?.username || user?.name  || req.auth?.user || "User";
+app.get('/api/user', function (req, res) {
+  const user = req.oidc?.user
+  const username = user?.preferred_username || user?.username || user?.name || req.auth?.user || 'Unknown User'
 
   res.json({
     username,
-    avatar: user?.picture,
-  });
-});
-
+    avatar: user?.picture
+  })
+})
 
 var logs = new Logs(config)
 

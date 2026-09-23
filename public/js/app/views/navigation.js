@@ -63,5 +63,5 @@ module.exports = Marionette.ItemView.extend({
     this.$('#user-avatar-fallback')
       .toggle(!this.avatar)
       .text(this.user.charAt(0).toUpperCase())
-  },
+  }
 })
