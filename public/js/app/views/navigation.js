@@ -64,9 +64,4 @@ module.exports = Marionette.ItemView.extend({
       .toggle(!this.avatar)
       .text(this.user.charAt(0).toUpperCase())
   },
-
-  logout: function (event) {
-    event.preventDefault()
-    window.location.href = '/logout'
-  }
 })
