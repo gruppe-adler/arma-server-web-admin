@@ -30,7 +30,7 @@ app.use(requiresRole(config.requiredRole))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 
-morgan.token('user', function (req) { return req.auth ? req.auth.user : 'anon' })
+morgan.token('user', function (req) { return req.oidc?.user?.preferred_username ?? 'anon' })
 app.use(morgan(config.logFormat || 'dev', { stream: config.logStream || process.stdout }))
 
 app.use(serveStatic(path.join(__dirname, 'public')))
