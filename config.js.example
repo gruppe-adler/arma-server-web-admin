@@ -2,7 +2,7 @@ module.exports = {
   game: 'arma3', // arma3, arma2oa, arma2, arma1, cwa, ofpresistance, ofp
   path: 'path-to-arma3-directory',
   modsPath: '', // optional: path to mod directories, relative to game directory
-  port: 3000,
+  port: 2001,
   host: '0.0.0.0', // Can be either an IP or a Hostname
   type: 'linux', // Can be either linux, windows or wine
   additionalConfigurationOptions: '', // Additional configuration options appended to server.cfg file
@@ -22,4 +22,17 @@ module.exports = {
   prefix: "", // Prefix to all server names
   suffix: "", // Suffix to all server names
   logFormat: "dev", // expressjs/morgan log format
+  requiredRole: 'adler',
+  ssoConfig: {
+    issuerBaseURL: "https://auth.gruppe-adler.de/realms/grad",
+    baseURL: "http://localhost:2001",
+    clientID: "arma-swa-dev",
+    clientSecret: "secret",
+    secret: "a-long-random-string-at-least-32-chars",
+    authRequired: true,
+    authorizationParams: {
+      response_type: "code",
+      scope: "openid profile email",
+    },
+  },
 };
