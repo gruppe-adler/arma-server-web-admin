@@ -85,9 +85,17 @@ if (require.main === module) {
   var webpackCompiler = webpack(webpackConfig)
 
   app.use(webpackMiddleware(webpackCompiler, {
-    publicPath: webpackConfig.output.publicPath
+    publicPath: webpackConfig.output.publicPath,
+    stats: {
+      colors: true,
+      assets: false,
+      chunks: false,
+      modules: false,
+      children: false
+    }
   }))
 
+  console.log(`\nListening on ${config.host}:${config.port}\n`)
   server.listen(config.port, config.host)
 }
 
