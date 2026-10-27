@@ -84,6 +84,25 @@ This is easiest solved using `winetricks` by running `winetricks nocrashdialog`.
 It can also be disabled manually.
 [Read more at Wine FAQ](http://wiki.winehq.org/FAQ#head-c857c433cf9fc1dcd90b8369ef75c325483c91d6).
 
+### Steam Workshop
+
+Mods are downloaded with SteamCMD, which is installed automatically on the first download (to `~/.config/steamcmd` on Linux).
+SteamCMD is a 32-bit program, on 64-bit Linux it needs the 32-bit C and C++ runtime libraries:
+
+Distribution | Command
+--- | ---
+Debian / Ubuntu | `sudo apt-get install lib32gcc-s1 lib32stdc++6`
+Fedora | `sudo dnf install glibc.i686 libstdc++.i686`
+openSUSE | `sudo zypper install glibc-32bit libgcc_s1-32bit libstdc++6-32bit`
+Arch Linux | `sudo pacman -S lib32-gcc-libs` (requires the `multilib` repository)
+
+Without them downloads fail with `linux32/steamcmd: cannot execute: required file not found`.
+
+Arma 3 Workshop mods can only be downloaded by a Steam account that owns Arma 3, set it as `steam.username` and `steam.password`.
+If the account uses Steam Guard, log in once manually so SteamCMD remembers the login: `~/.config/steamcmd/steamcmd.sh +login <username> +quit`.
+
+On Linux, Workshop mods require `virtualServer.enabled`.
+
 ## Docker
 
 ### Example
