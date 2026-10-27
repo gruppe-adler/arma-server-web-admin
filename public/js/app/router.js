@@ -1,6 +1,8 @@
 var $ = require('jquery')
 var Backbone = require('backbone')
 
+var notifications = require('app/notifications')
+
 var LayoutView = require('app/views/layout')
 var NavigationView = require('app/views/navigation')
 var ServersView = require('app/views/servers/list')
@@ -55,6 +57,7 @@ module.exports = Backbone.Router.extend({
     socket.on('settings', function (_settings) {
       settings.set(_settings)
     })
+    socket.on('notification', notifications.show)
   },
 
   home: function () {

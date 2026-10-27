@@ -2,6 +2,7 @@ var $ = require('jquery')
 var _ = require('underscore')
 var Marionette = require('marionette')
 var Ladda = require('ladda')
+var notifications = require('app/notifications')
 var tpl = require('tpl/mods/search/list_item.html')
 
 var template = _.template(tpl)
@@ -46,6 +47,7 @@ module.exports = Marionette.ItemView.extend({
       error: function (resp) {
         self.laddaBtn.stop()
         self.$el.find('.ladda-button').removeClass('disabled')
+        notifications.requestError('Installing ' + self.model.get('title') + ' failed', resp)
       }
     })
   }

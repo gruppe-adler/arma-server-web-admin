@@ -43,3 +43,18 @@ img.user-avatar {
   padding: 3px 20px;
   font-weight: bold;
 }
+
+.notifications {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 1060; /* Above Bootstrap modals */
+  width: 360px;
+  max-width: calc(100% - 40px);
+}
+
+.notifications .alert {
+  margin-bottom: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  overflow-wrap: anywhere;
+}

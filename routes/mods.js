@@ -20,7 +20,7 @@ module.exports = function (modsManager) {
   router.delete('/:mod', function (req, res) {
     modsManager.delete(req.params.mod, function (err) {
       if (err) {
-        res.status(500).send(err)
+        res.status(500).send(err.message || String(err))
       } else {
         res.status(204).send()
       }
@@ -36,7 +36,7 @@ module.exports = function (modsManager) {
     var query = req.body.query || ''
     modsManager.search(query, function (err, mods) {
       if (err || !mods) {
-        res.status(500).send(err)
+        res.status(500).send(err ? err.message || String(err) : 'No search results')
       } else {
         res.send(mods)
       }

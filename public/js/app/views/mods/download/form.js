@@ -4,7 +4,7 @@ var Marionette = require('marionette')
 var Ladda = require('ladda')
 var Mods = require('app/collections/mods')
 var tpl = require('tpl/mods/download/form.html')
-var sweetAlert = require('sweet-alert')
+var notifications = require('app/notifications')
 
 module.exports = Marionette.ItemView.extend({
 
@@ -71,11 +71,7 @@ module.exports = Marionette.ItemView.extend({
         self.modal.$el.find('.ladda-button').removeClass('disabled')
         self.modal.close()
 
-        sweetAlert({
-          title: 'Error',
-          text: 'An error occurred, please consult the logs',
-          type: 'error'
-        })
+        notifications.requestError('Downloading mod failed', resp)
       }
     })
   }

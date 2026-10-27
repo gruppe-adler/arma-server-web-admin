@@ -5,7 +5,7 @@ var ListItemView = require('app/views/mods/search/list_item')
 var Ladda = require('ladda')
 var Mods = require('app/collections/mods')
 var tpl = require('tpl/mods/search/form.html')
-var sweetAlert = require('sweet-alert')
+var notifications = require('app/notifications')
 
 module.exports = Marionette.CompositeView.extend({
 
@@ -73,17 +73,13 @@ module.exports = Marionette.CompositeView.extend({
         self.modal.$el.find('.btn.cancel').removeClass('disabled')
         self.collection.set(data)
       },
-      error: function () {
+      error: function (resp) {
         self.laddaBtn.stop()
         $form.find('.form-group').addClass('has-error')
         $form.find('.help-block').text('Problem searching, try again')
         self.modal.$el.find('.btn.cancel').removeClass('disabled')
 
-        sweetAlert({
-          title: 'Error',
-          text: 'An error occurred, please consult the logs',
-          type: 'error'
-        })
+        notifications.requestError('Searching Steam Workshop failed', resp)
       }
     })
   }

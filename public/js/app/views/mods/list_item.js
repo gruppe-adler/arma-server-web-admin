@@ -4,6 +4,8 @@ var Ladda = require('ladda')
 var Marionette = require('marionette')
 var sweetAlert = require('sweet-alert')
 
+var notifications = require('app/notifications')
+
 var tpl = require('tpl/mods/list_item.html')
 
 var template = _.template(tpl)
@@ -70,6 +72,7 @@ module.exports = Marionette.ItemView.extend({
       error: function (resp) {
         self.laddaBtn.stop()
         self.$el.find('.ladda-button').removeClass('disabled')
+        notifications.requestError('Updating ' + self.model.get('name') + ' failed', resp)
       }
     })
   },
@@ -85,7 +88,12 @@ module.exports = Marionette.ItemView.extend({
       confirmButtonText: 'Yes, delete it!'
     },
     function () {
-      self.model.destroy()
+      var name = self.model.get('name')
+      self.model.destroy({
+        error: function (model, resp) {
+          notifications.requestError('Deleting ' + name + ' failed', resp)
+        }
+      })
     })
   }
 })

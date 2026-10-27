@@ -81,6 +81,13 @@ manager.on('servers', function () {
   io.emit('servers', manager.getServers())
 })
 
+function sendNotification (notification) {
+  io.emit('notification', notification)
+}
+
+mods.on('notification', sendNotification)
+manager.on('notification', sendNotification)
+
 if (require.main === module) {
   var webpackCompiler = webpack(webpackConfig)
 
