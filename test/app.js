@@ -1,4 +1,5 @@
 const oidc = require('express-openid-connect')
+const socketClient = require('socket.io-client')
 const request = require('supertest')
 require('should')
 
@@ -12,11 +13,21 @@ function fakeJwt (payload) {
 }
 
 // Replace OIDC login with a logged in user that has the required role, avoids talking to Keycloak
-oidc.auth = function () {
+oidc.auth = function (options) {
   return function (req, res, next) {
     const roles = req.get('X-Test-Roles') ? req.get('X-Test-Roles').split(',') : [config.requiredRole]
     req.appSession = {}
+
+    if (req.get('X-Test-Anonymous')) {
+      if (options.authRequired === false) {
+        req.oidc = { isAuthenticated: () => false }
+        return next()
+      }
+      return res.redirect('/login')
+    }
+
     req.oidc = {
+      isAuthenticated: () => true,
       user: { preferred_username: 'test' },
       accessToken: {
         access_token: fakeJwt({ realm_access: { roles } }),
@@ -67,6 +78,92 @@ describe('App', function () {
       .get('/api/user')
       .expect(200, { username: 'test', permissions: { installGame: false } })
       .end(done)
+  })
+
+  describe('path and id validation', function () {
+    it('should not download files outside of missions folder', function (done) {
+      request(app)
+        .get('/api/missions/..%2F..%2Fpackage.json')
+        .expect(400, 'Invalid mission name')
+        .end(done)
+    })
+
+    it('should not delete files outside of missions folder', function (done) {
+      request(app)
+        .delete('/api/missions/..%2F..%2Fpackage.json')
+        .expect(400, 'Invalid mission name')
+        .end(done)
+    })
+
+    it('should not delete paths outside of Workshop folder', function (done) {
+      request(app)
+        .delete('/api/mods/..%2F..')
+        .expect(400, 'Invalid Steam Workshop ID: ../..')
+        .end(done)
+    })
+
+    it('should not download invalid Workshop ids', function (done) {
+      request(app)
+        .post('/api/mods')
+        .send({ id: '1 +quit' })
+        .expect(400, 'Invalid Steam Workshop ID: 1 +quit')
+        .end(done)
+    })
+  })
+
+  describe('live updates', function () {
+    let url
+
+    before(function (done) {
+      app.server.listen(0, '127.0.0.1', function () {
+        url = 'http://127.0.0.1:' + app.server.address().port
+        done()
+      })
+    })
+
+    after(function (done) {
+      app.server.close(function () {
+        done()
+      })
+    })
+
+    function connect (headers) {
+      return socketClient(url, { transports: ['polling'], extraHeaders: headers, reconnection: false, forceNew: true })
+    }
+
+    function expectRejected (headers, done) {
+      const socket = connect(headers)
+      socket.on('servers', function () {
+        socket.close()
+        done(new Error('servers were sent'))
+      })
+      socket.on('error', function (err) {
+        socket.close()
+        err.should.eql('Unauthorized')
+        done()
+      })
+    }
+
+    it('should reject anonymous connections', function (done) {
+      expectRejected({ 'X-Test-Anonymous': '1' }, done)
+    })
+
+    it('should reject users without required role', function (done) {
+      expectRejected({ 'X-Test-Roles': 'other' }, done)
+    })
+
+    it('should send servers to users with required role', function (done) {
+      const socket = connect({})
+      socket.on('servers', function (servers) {
+        socket.close()
+        servers.should.be.an.Array()
+        done()
+      })
+      socket.on('error', function (err) {
+        socket.close()
+        done(new Error(err))
+      })
+    })
   })
 
   describe('game install', function () {

@@ -47,21 +47,21 @@
         <div class="form-group">
           <label class="col-sm-1 control-label">Name</label>
           <div class="col-sm-11">
-            <p class="form-control-static"><%= process.name %></p>
+            <p class="form-control-static"><%- process.name %></p>
           </div>
         </div>
 
         <div class="form-group">
           <label class="col-sm-1 control-label">CPU</label>
           <div class="col-sm-11">
-            <p class="form-control-static"><%= process.cpuFormatted %></p>
+            <p class="form-control-static"><%- process.cpuFormatted %></p>
           </div>
         </div>
 
         <div class="form-group">
           <label class="col-sm-1 control-label">RAM</label>
           <div class="col-sm-11">
-            <p class="form-control-static"><%= process.memoryFormatted %></p>
+            <p class="form-control-static"><%- process.memoryFormatted %></p>
           </div>
         </div>
       <% }) %>
@@ -73,21 +73,21 @@
   <div class="form-group">
     <label class="col-sm-1 control-label">Name</label>
     <div class="col-sm-11">
-      <p class="form-control-static"><%= state.name %></p>
+      <p class="form-control-static"><%- state.name %></p>
     </div>
   </div>
 
   <div class="form-group">
     <label class="col-sm-1 control-label">Map</label>
     <div class="col-sm-11">
-      <p class="form-control-static"><%= state.map %></p>
+      <p class="form-control-static"><%- state.map %></p>
     </div>
   </div>
 
   <div class="form-group">
     <label class="col-sm-1 control-label">Mission</label>
     <div class="col-sm-11">
-      <p class="form-control-static"><%= state.raw.game %></p>
+      <p class="form-control-static"><%- state.raw.game %></p>
     </div>
   </div>
 
@@ -95,7 +95,7 @@
     <label class="col-sm-1 control-label">Players</label>
     <div class="col-sm-11">
       <p class="form-control-static">
-        <%= state.players.length %> / <%= state.maxplayers %>
+        <%- state.players.length %> / <%- state.maxplayers %>
       </p>
     </div>
   </div>

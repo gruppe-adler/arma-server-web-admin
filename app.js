@@ -15,6 +15,7 @@ var Missions = require('./lib/missions')
 var SteamMods = require('./lib/steam_mods')
 var Logs = require('./lib/logs')
 var Settings = require('./lib/settings')
+var socketAuth = require('./lib/socket_auth')
 const requiresRole = require('./lib/auth')
 
 var app = express()
@@ -71,6 +72,9 @@ app.use('/api/game', requiresRole(config.gameInstallRole), require('./routes/gam
 app.use('/api/servers', require('./routes/servers')(manager, mods, gameInstaller))
 app.use('/api/settings', require('./routes/settings')(settings))
 
+// Live updates contain server passwords, without login redirects as socket.io cannot follow them
+io.use(socketAuth(auth({ ...config.ssoConfig, idpLogout: true, authRequired: false }), config.requiredRole))
+
 io.on('connection', function (socket) {
   socket.emit('missions', missions.missions)
   socket.emit('mods', mods.mods)
@@ -120,5 +124,7 @@ if (require.main === module) {
   console.log(`\nListening on ${config.host}:${config.port}\n`)
   server.listen(config.port, config.host)
 }
+
+app.server = server
 
 module.exports = app

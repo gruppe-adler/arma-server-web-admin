@@ -20,6 +20,30 @@ describe('SteamMods', function () {
     })
   })
 
+  describe('Steam Workshop ids', function () {
+    it('should not delete paths outside of Workshop folder', function (done) {
+      var steamMods = new SteamMods({ steam: {} })
+      steamMods.armaSteamWorkshop.deleteMod = function () {
+        done(new Error('deleteMod should not be called'))
+      }
+      steamMods.delete('../..', function (err) {
+        err.message.should.eql('Invalid Steam Workshop ID: ../..')
+        done()
+      })
+    })
+
+    it('should not pass invalid ids to SteamCMD', function (done) {
+      var steamMods = new SteamMods({ steam: {} })
+      steamMods.armaSteamWorkshop.downloadMod = function () {
+        done(new Error('downloadMod should not be called'))
+      }
+      steamMods.download('1 +quit', function (err) {
+        err.message.should.eql('Invalid Steam Workshop ID: 1 +quit')
+        done()
+      })
+    })
+  })
+
   describe('download()', function () {
     it('should notify about failed download', function (done) {
       var steamMods = new SteamMods({ steam: {} })

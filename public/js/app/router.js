@@ -60,6 +60,11 @@ module.exports = Backbone.Router.extend({
       settings.set(_settings)
     })
     socket.on('notification', notifications.show)
+    socket.on('error', function (err) {
+      if (err === 'Unauthorized') {
+        notifications.error('Live updates unavailable', 'Your session has expired, reload the page to log in again')
+      }
+    })
     socket.on('gameInstall', function (status) {
       gameInstall.set(status)
     })

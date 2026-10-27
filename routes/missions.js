@@ -36,12 +36,21 @@ module.exports = function (missionsManager) {
 
   router.get('/:mission', function (req, res) {
     var filename = req.params.mission
+    var missionPath = missionsManager.missionPath(filename)
 
-    res.download(missionsManager.missionPath(filename), decodeURI(filename))
+    if (!missionPath) {
+      return res.status(400).send('Invalid mission name')
+    }
+
+    res.download(missionPath, decodeURI(filename))
   })
 
   router.delete('/:mission', function (req, res) {
     var filename = req.params.mission
+
+    if (!missionsManager.missionPath(filename)) {
+      return res.status(400).send('Invalid mission name')
+    }
 
     missionsManager.delete(filename, function (err) {
       if (err) {
