@@ -8,10 +8,6 @@ var should = require('should')
 var virtualServer = require('../../lib/virtualServer.js')
 
 var basicServerFiles = [
-  '@mod/addons/addon.pbo',
-  '@mod/keys/mod.bikey',
-  '@mod/optionals/@nested_mod/addons/nested_addon.pbo',
-  '@mod/optionals/@nested_mod/keys/nested_mod.bikey',
   'addons/data_f.pbo',
   'arma3server',
   'arma3server.exe',
@@ -23,6 +19,13 @@ var basicServerFiles = [
   'mpmissions/test.vr.pbo',
   'steam.dll',
   'steam_appid.txt'
+]
+
+var workshopFiles = [
+  '111/addons/addon.pbo',
+  '111/keys/mod_111.bikey',
+  '222/addons/addon.pbo',
+  '222/keys/mod_222.bikey'
 ]
 
 function createEmptyFile (file, cb) {
@@ -63,6 +66,7 @@ function createTempServerFolder (files, cb) {
 describe('VirtualServer', function () {
   var serverFolder
   var tempServerFolder
+  var workshopFolder
 
   function createVirtualServer (mods, done) {
     createTempServerFolder(basicServerFiles, function (err, folder) {
@@ -72,14 +76,25 @@ describe('VirtualServer', function () {
 
       serverFolder = folder
 
-      return virtualServer.create({
-        path: serverFolder
-      }, mods)
-        .then(function (serverFolder) {
-          tempServerFolder = serverFolder
-          done()
-        })
-        .catch(done)
+      createTempServerFolder(workshopFiles, function (err, folder) {
+        if (err) {
+          return done(err)
+        }
+
+        workshopFolder = folder
+
+        // Workshop mods are passed with their full path
+        return virtualServer.create({
+          path: serverFolder
+        }, mods.map(function (mod) {
+          return path.join(workshopFolder, mod)
+        }))
+          .then(function (serverFolder) {
+            tempServerFolder = serverFolder
+            done()
+          })
+          .catch(done)
+      })
     })
   }
 
@@ -90,7 +105,13 @@ describe('VirtualServer', function () {
           return done(err)
         }
 
-        fsExtra.rmrf(serverFolder, done)
+        fsExtra.rmrf(serverFolder, function (err) {
+          if (err) {
+            return done(err)
+          }
+
+          fsExtra.rmrf(workshopFolder, done)
+        })
       })
     } else if (serverFolder) {
       fsExtra.rmrf(serverFolder, done)
@@ -180,94 +201,62 @@ describe('VirtualServer', function () {
     })
   })
 
-  describe('mod', function () {
+  describe('workshop mod', function () {
     before(function (done) {
-      var mods = [
-        '@mod'
-      ]
-      createVirtualServer(mods, done)
+      createVirtualServer(['111'], done)
     })
 
     after(function (done) {
       removeVirtualServer(done)
     })
 
-    it('should link @mod folder', function (done) {
-      checkForLink('@mod', done)
+    it('should link mod folder by workshop id', function (done) {
+      checkForLink('111', done)
     })
 
-    it('should have @mod folder with addons folder containing addon.pbo', function (done) {
-      checkForFile('@mod/addons/addon.pbo', done)
+    it('should have mod folder with addons folder containing addon.pbo', function (done) {
+      checkForFile('111/addons/addon.pbo', done)
     })
 
-    it('should have keys folder with mod.bikey', function (done) {
-      checkForFile('keys/mod.bikey', done)
-    })
-  })
-
-  describe('nested mod', function () {
-    before(function (done) {
-      var mods = [
-        path.join('@mod', 'optionals', '@nested_mod')
-      ]
-      createVirtualServer(mods, done)
+    it('should have keys folder with mod key', function (done) {
+      checkForFile('keys/mod_111.bikey', done)
     })
 
-    after(function (done) {
-      removeVirtualServer(done)
-    })
-
-    it('should link @mod', function (done) {
-      checkForLink('@mod', done)
-    })
-
-    it('should have @mod folder with optionals @nested_mod folder with addons folder containing nested_addon.pbo', function (done) {
-      checkForFile('@mod/optionals/@nested_mod/addons/nested_addon.pbo', done)
-    })
-
-    it('should not have mod.bikey in keys', function (done) {
-      fs.access(path.join(tempServerFolder, 'keys', 'mod.bikey'), function (err) {
+    it('should not have keys of other mods', function (done) {
+      fs.access(path.join(tempServerFolder, 'keys', 'mod_222.bikey'), function (err) {
         should.exist(err)
         done()
       })
     })
-
-    it('should have keys folder with nested_mod.bikey', function (done) {
-      checkForFile('keys/nested_mod.bikey', done)
-    })
   })
 
-  describe('multiple mods', function () {
+  describe('multiple workshop mods', function () {
     before(function (done) {
-      var mods = [
-        '@mod',
-        path.join('@mod', 'optionals', '@nested_mod')
-      ]
-      createVirtualServer(mods, done)
+      createVirtualServer(['111', '222'], done)
     })
 
     after(function (done) {
       removeVirtualServer(done)
     })
 
-    it('should link @mod', function (done) {
-      checkForLink('@mod', done)
+    it('should link first mod folder', function (done) {
+      checkForLink('111', done)
     })
 
-    it('should have @mod folder with addons folder containing addon.pbo', function (done) {
-      checkForFile('@mod/addons/addon.pbo', done)
+    it('should link second mod folder', function (done) {
+      checkForLink('222', done)
     })
 
-    it('should have @mod folder with optionals @nested_mod folder with addons folder containing nested_addon.pbo', function (done) {
-      checkForFile('@mod/optionals/@nested_mod/addons/nested_addon.pbo', done)
+    it('should have second mod folder with addons folder containing addon.pbo', function (done) {
+      checkForFile('222/addons/addon.pbo', done)
     })
 
-    it('should have keys folder with nested_mod.bikey', function (done) {
-      checkForFile('keys/mod.bikey', done)
+    it('should have keys folder with first mod key', function (done) {
+      checkForFile('keys/mod_111.bikey', done)
     })
 
-    it('should have keys folder with nested_mod.bikey', function (done) {
-      checkForFile('keys/nested_mod.bikey', done)
+    it('should have keys folder with second mod key', function (done) {
+      checkForFile('keys/mod_222.bikey', done)
     })
   })
 })

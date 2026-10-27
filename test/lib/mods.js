@@ -53,6 +53,14 @@ describe('Mods', function () {
     })
   })
 
+  describe('find()', function () {
+    it('returns mod with id', function () {
+      var mods = new Mods({ path: absoluteArmaPath })
+      mods.mods = [{ id: '@a', name: '@a' }, { id: '@b', name: '@b' }]
+      mods.find('@b').should.eql({ id: '@b', name: '@b' })
+    })
+  })
+
   describe('updateMods()', function () {
     it('finds mods in arma dir', function (done) {
       var mods = new Mods({ path: path.join(__dirname, '..', 'resources', 'armaPath') })

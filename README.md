@@ -51,6 +51,8 @@ logStream | ExpressJS/Morgan writable log stream, defaults to `process.stdout`
 modsPath | Path where game mods are stored. Leave empty to use game directory
 parameters | Extra startup parameters added to servers and headless clients
 serverMods | Mods that always and only will be used by the game servers
+steam | Steam Workshop settings: `apiKey` for search, `path` to the Steam folder containing `steamapps`, `username` and `password` for downloads
+virtualServer | Start each server from a temporary folder linking the game files, Workshop mods and their keys. Required for Workshop mods on Linux
 auth | If both username and password is set, HTTP Basic Auth will be used
 prefix | Text prepended to all game servers name
 suffix | Text appended to all game servers name
