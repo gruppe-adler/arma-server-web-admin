@@ -58,3 +58,63 @@ img.user-avatar {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   overflow-wrap: anywhere;
 }
+
+.log-viewer-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.log-viewer-title {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.log-viewer-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-left: auto;
+}
+
+.log-viewer-actions .checkbox-inline {
+  padding-top: 0;
+}
+
+.log-viewer {
+  height: calc(100vh - 170px);
+  min-height: 300px;
+  margin: 0;
+  padding: 10px 12px;
+  overflow: auto;
+  border: 0;
+  border-radius: 4px;
+  background: #1e1e1e;
+  color: #d4d4d4;
+  color-scheme: dark; /* Dark scrollbars */
+  scrollbar-color: #555 #1e1e1e;
+  font-size: 12px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: normal;
+  overflow-wrap: anywhere;
+}
+
+.log-viewer.log-viewer-nowrap {
+  white-space: pre;
+  overflow-wrap: normal;
+}
+
+.log-viewer .log-error {
+  color: #f48771;
+}
+
+.log-viewer .log-warning {
+  color: #dcdcaa;
+}
+
+.log-viewer .log-placeholder {
+  color: #808080;
+}

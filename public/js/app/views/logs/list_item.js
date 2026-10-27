@@ -14,6 +14,10 @@ module.exports = Marionette.ItemView.extend({
     'click .destroy': 'deleteLog'
   },
 
+  modelEvents: {
+    change: 'render'
+  },
+
   deleteLog: function (event) {
     var self = this
     sweetAlert({

@@ -24,6 +24,26 @@ module.exports = function (logsManager) {
     })
   })
 
+  router.get('/:log/tail', function (req, res) {
+    var offset
+    if (req.query.offset !== undefined) {
+      offset = Number(req.query.offset)
+      if (!Number.isSafeInteger(offset) || offset < 0) {
+        return res.status(400).send('Invalid offset')
+      }
+    }
+
+    logsManager.tail(req.params.log, offset, function (err, tail) {
+      if (err) {
+        res.status(500).send(err.message)
+      } else if (!tail) {
+        res.status(404).send('Log not found')
+      } else {
+        res.json(tail)
+      }
+    })
+  })
+
   router.get('/:log/:mode', function (req, res) {
     var requestedFilename = req.params.log
     var mode = req.params.mode === 'view' ? 'view' : 'download'

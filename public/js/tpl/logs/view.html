@@ -1,0 +1,32 @@
+<div class="log-viewer-header">
+  <a class="btn btn-default btn-sm" href="#logs">
+    <span class="glyphicon glyphicon-chevron-left"></span>
+    Logs
+  </a>
+
+  <h4 class="log-viewer-title"><%- name %></h4>
+
+  <span class="label label-default" id="log-status">Loading</span>
+  <span class="text-muted small" id="log-size"></span>
+
+  <div class="log-viewer-actions">
+    <label class="checkbox-inline">
+      <input type="checkbox" id="log-follow" checked>
+      Follow
+    </label>
+    <label class="checkbox-inline">
+      <input type="checkbox" id="log-wrap" checked>
+      Wrap lines
+    </label>
+    <a class="btn btn-default btn-sm" href="/api/logs/<%- encodeURIComponent(name) %>/download">
+      <span class="glyphicon glyphicon-download"></span>
+      Download
+    </a>
+  </div>
+</div>
+
+<p class="text-muted small" id="log-truncated" style="display: none;">
+  Showing the end of the log, download it to see everything.
+</p>
+
+<pre class="log-viewer" id="log-output"><span class="log-placeholder">Waiting for log output...</span></pre>

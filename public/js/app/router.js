@@ -7,6 +7,7 @@ var LayoutView = require('app/views/layout')
 var NavigationView = require('app/views/navigation')
 var ServersView = require('app/views/servers/list')
 var LogsListView = require('app/views/logs/list')
+var LogView = require('app/views/logs/view')
 var MissionsView = require('app/views/missions/index')
 var ModsView = require('app/views/mods/index')
 var ServerView = require('app/views/servers/view')
@@ -29,6 +30,7 @@ module.exports = Backbone.Router.extend({
 
   routes: {
     logs: 'logs',
+    'logs/:name': 'log',
     missions: 'missions',
     mods: 'mods',
     'servers/:id': 'server',
@@ -78,6 +80,10 @@ module.exports = Backbone.Router.extend({
     var logs = new Logs()
     logs.fetch()
     layoutView.content.show(new LogsListView({ collection: logs }))
+  },
+
+  log: function (name) {
+    layoutView.content.show(new LogView({ name: name }))
   },
 
   missions: function () {

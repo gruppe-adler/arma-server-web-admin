@@ -103,4 +103,18 @@ describe('Templates', function () {
       html.should.containEql('id="custom-branch" autocomplete="off" value="legacy"')
     })
   })
+
+  describe('Logs', function () {
+    it('should open log in viewer from list', function () {
+      var html = render('logs/list_item.html', { name: 'server_2026-10-27.rpt', created: '2026-10-27T10:00:00Z', modified: '2026-10-27T10:00:00Z', formattedSize: '1 KB', size: 1024 })
+      html.should.containEql("<a href='#logs/server_2026-10-27.rpt'>server_2026-10-27.rpt</a>")
+      html.should.containEql('href="/api/logs/server_2026-10-27.rpt/download"')
+    })
+
+    it('should escape log name in viewer', function () {
+      var html = render('logs/view.html', { name: payload })
+      html.should.not.containEql(payload)
+      html.should.containEql('id="log-output"')
+    })
+  })
 })

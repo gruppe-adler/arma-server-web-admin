@@ -15,7 +15,8 @@ module.exports = Marionette.ItemView.extend({
   templateHelpers: function () {
     return {
       isActiveRoute: function (route) {
-        return Backbone.history.fragment === route ? 'active' : ''
+        var fragment = Backbone.history.fragment || '' // Undefined until the router started
+        return fragment === route || (route && fragment.indexOf(route + '/') === 0) ? 'active' : ''
       }
     }
   },
