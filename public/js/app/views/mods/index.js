@@ -82,5 +82,6 @@ module.exports = Marionette.LayoutView.extend({
     })
     view.modal = modal
     modal.open()
+    modal.$el.find('.modal-dialog').addClass('modal-lg')
   }
 })
