@@ -29,11 +29,17 @@ describe('Templates', function () {
       port: 2302,
       password: '',
       mods: [],
+      presetUrl: 'https://admin.example.com/presets/test.html',
       pid: 1,
       processes: [{ name: payload, cpuFormatted: '1 %', memoryFormatted: '1 MB' }],
       state: { name: payload, map: payload, raw: { game: payload }, players: [], maxplayers: 10 }
     })
     html.should.not.containEql(payload)
+  })
+
+  it('should link launcher preset on server info', function () {
+    var html = render('servers/info.html', { id: 'test', title: 'test', port: 2302, mods: [], presetUrl: 'https://admin.example.com/presets/test.html', pid: null, processes: null, state: null })
+    html.should.containEql('<a href="https://admin.example.com/presets/test.html" target="_blank" rel="noopener noreferrer">https://admin.example.com/presets/test.html</a>')
   })
 
   describe('Workshop mods', function () {

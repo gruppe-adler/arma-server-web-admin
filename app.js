@@ -22,9 +22,25 @@ var app = express()
 var server = require('http').Server(app)
 var io = require('socket.io')(server)
 
+var logs = new Logs(config)
+
+var missions = new Missions(config)
+var mods = new SteamMods(config)
+mods.updateMods()
+
+var manager = new Manager(config, logs, mods)
+manager.load()
+
+var settings = new Settings(config)
+
+var gameInstaller = new GameInstaller(config)
+
 app.get('/favicon.ico', function (req, res) {
   res.sendFile(path.join(__dirname, 'public', 'favicon.ico'))
 })
+
+// Registered before login, everything below requires Keycloak
+app.use('/presets', require('./routes/presets')(manager, mods))
 
 app.use(auth({ ...config.ssoConfig, idpLogout: true }))
 app.use(requiresRole(config.requiredRole))
@@ -51,19 +67,6 @@ app.get('/api/user', function (req, res) {
     }
   })
 })
-
-var logs = new Logs(config)
-
-var missions = new Missions(config)
-var mods = new SteamMods(config)
-mods.updateMods()
-
-var manager = new Manager(config, logs, mods)
-manager.load()
-
-var settings = new Settings(config)
-
-var gameInstaller = new GameInstaller(config)
 
 app.use('/api/logs', require('./routes/logs')(logs))
 app.use('/api/missions', require('./routes/missions')(missions))

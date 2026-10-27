@@ -6,6 +6,16 @@ require('should')
 var cdlc = require('../../lib/cdlc.js')
 
 describe('cdlc', function () {
+  describe('find()', function () {
+    it('should find Creator DLC with Steam app id', function () {
+      cdlc.find('gm').should.eql({ id: 'gm', name: 'Global Mobilization', appId: 1042220 })
+    })
+
+    it('should not find other folders', function () {
+      (cdlc.find('@ace') === undefined).should.be.true()
+    })
+  })
+
   describe('installed()', function () {
     var gamePath
 

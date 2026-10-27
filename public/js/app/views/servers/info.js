@@ -62,6 +62,7 @@ module.exports = Marionette.LayoutView.extend({
   templateHelpers: function () {
     var self = this
     return {
+      presetUrl: window.location.origin + '/presets/' + encodeURIComponent(self.model.get('id')) + '.html',
       mods: self.options.mods.filter(function (mod) {
         return self.model.get('mods').indexOf(mod.get('id')) >= 0
       }).map(function (mod) {

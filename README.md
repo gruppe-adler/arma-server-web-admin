@@ -57,6 +57,12 @@ auth | If both username and password is set, HTTP Basic Auth will be used
 prefix | Text prepended to all game servers name
 suffix | Text appended to all game servers name
 
+## Launcher Presets
+
+Each server has a public mod list at `/presets/<server id>.html`, linked on the server's info page.
+Players can open it in a browser and drag the file onto the Arma 3 Launcher, or import it in the launcher under Mods, Preset, Import.
+It lists the server's Steam Workshop mods and Creator DLCs and is available without logging in.
+
 ## How to Use
 
 1. Copy `config.js.example` to `config.js`

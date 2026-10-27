@@ -80,6 +80,24 @@ describe('App', function () {
       .end(done)
   })
 
+  describe('launcher presets', function () {
+    it('should be public', function (done) {
+      request(app)
+        .get('/presets/unknown.html')
+        .set('X-Test-Anonymous', '1')
+        .expect(404, 'Server not found')
+        .end(done)
+    })
+
+    it('should not make the API public', function (done) {
+      request(app)
+        .get('/api/servers')
+        .set('X-Test-Anonymous', '1')
+        .expect(302)
+        .end(done)
+    })
+  })
+
   describe('path and id validation', function () {
     it('should not download files outside of missions folder', function (done) {
       request(app)
