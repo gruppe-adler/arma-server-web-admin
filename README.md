@@ -52,6 +52,7 @@ parameters | Extra startup parameters added to servers and headless clients
 serverMods | Mods that always and only will be used by the game servers
 steam | Steam Workshop settings: `apiKey` for search, `path` to the Steam folder containing `steamapps`, `username` and `password` for downloads
 gameInstallRole | Keycloak realm role allowed to install and update Arma 3 with SteamCMD from the user menu. Disabled if empty
+gameInstallBranch | Branch preselected when installing Arma 3, defaults to `public`. Private branches are preselected as custom branch name
 virtualServer | Start each server from a temporary folder linking the game files, Workshop mods and their keys. Required for Workshop mods on Linux
 auth | If both username and password is set, HTTP Basic Auth will be used
 prefix | Text prepended to all game servers name

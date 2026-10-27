@@ -202,6 +202,7 @@ describe('App', function () {
         .expect(200)
         .expect(function (res) {
           res.body.should.have.property('path', config.path)
+          res.body.should.have.property('defaultBranch', 'public')
           res.body.status.should.have.property('installing', false)
         })
         .end(done)

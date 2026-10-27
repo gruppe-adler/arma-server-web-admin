@@ -81,4 +81,26 @@ describe('Templates', function () {
       html.should.containEql('add-mod')
     })
   })
+
+  describe('Arma 3 install dialog', function () {
+    var branches = [
+      { name: 'public', description: '', buildId: '1', updated: null },
+      { name: 'contact', description: 'Contact Build', buildId: '2', updated: null }
+    ]
+    var base = { installing: false, branch: null, state: null, progress: null, error: null, path: '/arma3', branches: branches }
+
+    it('should preselect listed default branch', function () {
+      var html = render('game/install.html', Object.assign({ defaultBranch: 'contact', customBranch: '' }, base))
+      html.should.match(/<option value="contact" selected>/)
+      html.should.match(/<option value="public" >/)
+      html.should.containEql('id="custom-branch-group" style="display: none;"')
+    })
+
+    it('should preselect private default branch as custom branch', function () {
+      var html = render('game/install.html', Object.assign({ defaultBranch: 'legacy', customBranch: 'legacy' }, base))
+      html.should.containEql('<option value="" selected>Other branch...</option>')
+      html.should.not.containEql('id="custom-branch-group" style="display: none;"')
+      html.should.containEql('id="custom-branch" autocomplete="off" value="legacy"')
+    })
+  })
 })

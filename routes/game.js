@@ -5,6 +5,7 @@ module.exports = function (gameInstaller, manager) {
 
   router.get('/', function (req, res) {
     res.json({
+      defaultBranch: gameInstaller.config.gameInstallBranch || 'public',
       path: gameInstaller.config.path,
       status: gameInstaller.status
     })

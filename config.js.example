@@ -37,6 +37,7 @@ module.exports = {
   logFormat: "dev", // expressjs/morgan log format
   requiredRole: 'adler',
   gameInstallRole: '', // Keycloak realm role allowed to install Arma 3 with SteamCMD, disabled if empty
+  gameInstallBranch: 'public', // Branch preselected when installing Arma 3, e.g. public, creatordlc or profiling
   ssoConfig: {
     issuerBaseURL: "https://auth.gruppe-adler.de/realms/grad",
     baseURL: "http://localhost:2001",

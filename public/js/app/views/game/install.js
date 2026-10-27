@@ -18,8 +18,15 @@ module.exports = Marionette.ItemView.extend({
   },
 
   templateHelpers: function () {
+    var self = this
+    var listed = (this.branches || []).some(function (branch) {
+      return branch.name === self.defaultBranch
+    })
+
     return {
       branches: this.branches,
+      customBranch: listed ? '' : this.defaultBranch,
+      defaultBranch: this.defaultBranch,
       error: this.error,
       path: this.path
     }
@@ -27,6 +34,7 @@ module.exports = Marionette.ItemView.extend({
 
   initialize: function () {
     this.branches = null
+    this.defaultBranch = 'public'
     this.error = null
     this.path = ''
     this.submitting = false
@@ -41,6 +49,7 @@ module.exports = Marionette.ItemView.extend({
     $.when($.getJSON('/api/game'), $.getJSON('/api/game/branches'))
       .done(function (game, branches) {
         self.path = game[0].path
+        self.defaultBranch = game[0].defaultBranch
         self.branches = branches[0]
       })
       .fail(function (xhr) {
