@@ -62,6 +62,13 @@ describe('Templates', function () {
       html.should.not.containEql('<a ')
     })
 
+    it('should show selected mod name without editing', function () {
+      var html = render('servers/mods/selected/list_item.html', { name: 'Global Mobilization' })
+      html.should.containEql('Global Mobilization')
+      html.should.not.containEql('<input')
+      html.should.containEql('delete')
+    })
+
     it('should allow adding Creator DLC to servers', function () {
       var html = render('servers/mods/available/list_item.html', Object.assign({ isDisabledButton: function () { return '' } }, cdlc))
       html.should.containEql('Creator DLC')
