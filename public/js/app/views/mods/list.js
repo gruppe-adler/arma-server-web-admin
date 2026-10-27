@@ -16,22 +16,6 @@ module.exports = Marionette.CompositeView.extend({
   },
 
   filter: function (child, index, collection) {
-    var name = child.get('name').toLowerCase()
-
-    if (name.indexOf(this.filterValue.toLowerCase()) >= 0) {
-      return true
-    }
-
-    var modFile = child.get('modFile')
-    if (modFile && modFile.name && modFile.name.toLowerCase().indexOf(this.filterValue.toLowerCase()) >= 0) {
-      return true
-    }
-
-    var steamMeta = child.get('steamMeta')
-    if (steamMeta && steamMeta.name && steamMeta.name.toLowerCase().indexOf(this.filterValue.toLowerCase()) >= 0) {
-      return true
-    }
-
-    return false
+    return child.get('name').toLowerCase().indexOf(this.filterValue.toLowerCase()) >= 0
   }
 })

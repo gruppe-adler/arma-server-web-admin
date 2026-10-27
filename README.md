@@ -12,7 +12,7 @@ A simple to use web admin panel for Arma servers.
 - See server status queryed from the instances with current mission and players
 - Download game logs
 - Upload missions from your local computer and from Steam Workshop to the server
-- Download and update mods from withSIX
+- Search, download and update mods from Steam Workshop
 
 ## Requirements
 
@@ -48,7 +48,6 @@ type | Which kind of server to use, can be 'linux', 'windows' or 'wine'
 additionalConfigurationOptions | Additional configuration options appended to server.cfg file
 logFormat | ExpressJS/Morgan log format, defaults to `"dev"`
 logStream | ExpressJS/Morgan writable log stream, defaults to `process.stdout`
-modsPath | Path where game mods are stored. Leave empty to use game directory
 parameters | Extra startup parameters added to servers and headless clients
 serverMods | Mods that always and only will be used by the game servers
 steam | Steam Workshop settings: `apiKey` for search, `path` to the Steam folder containing `steamapps`, `username` and `password` for downloads

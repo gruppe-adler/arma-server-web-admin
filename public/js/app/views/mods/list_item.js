@@ -24,29 +24,8 @@ module.exports = Marionette.ItemView.extend({
   },
 
   templateHelpers: function () {
-    var modFile = this.model.get('modFile')
-    var steamMeta = this.model.get('steamMeta')
-
-    var link = null
-    var title = null
-
-    if (steamMeta && steamMeta.id) {
-      if (steamMeta.id) {
-        link = 'https://steamcommunity.com/sharedfiles/filedetails/?id=' + steamMeta.id
-      }
-
-      if (steamMeta.name) {
-        title = steamMeta.name
-      }
-    }
-
-    if (modFile && modFile.name) {
-      title = modFile.name
-    }
-
     return {
-      link: link,
-      title: title
+      link: 'https://steamcommunity.com/sharedfiles/filedetails/?id=' + encodeURIComponent(this.model.get('id'))
     }
   },
 

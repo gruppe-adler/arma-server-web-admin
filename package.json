@@ -18,7 +18,6 @@
   },
   "dependencies": {
     "@node-steam/vdf": "^2.2.0",
-    "arma-class-parser": "^1.1.1",
     "arma-server": "0.0.10",
     "arma-steam-workshop": "https://github.com/Dahlgren/node-arma-steam-workshop/tarball/57f11ee85ccac0a18a74c5acb5645c9af78ec5c0",
     "async": "^2.6.4",

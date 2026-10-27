@@ -1,15 +1,5 @@
 <td>
-  <%-name%>
-  <% if (link) { %>
-    <a href='<%-link%>' target=_blank rel='noopener noreferrer'>
-      <%-title%>
-    </a>
-  <% } else if (title) { %>
-    <%-title%>
-  <% } %>
-</td>
-<td style="text-align: right; white-space: nowrap;">
-  <%-formattedSize%>
+  <a href='<%-link%>' target=_blank rel='noopener noreferrer'><%-name%></a>
 </td>
 <td>
   <% if (downloading) { %>

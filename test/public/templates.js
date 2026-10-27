@@ -35,4 +35,20 @@ describe('Templates', function () {
     })
     html.should.not.containEql(payload)
   })
+
+  describe('Workshop mods', function () {
+    var mod = { downloading: false, id: '450814997', name: 'CBA_A3', needsUpdate: true, path: '/steam/450814997' }
+    var link = 'https://steamcommunity.com/sharedfiles/filedetails/?id=450814997'
+
+    it('should link mod to Workshop page in mods list', function () {
+      var html = render('mods/list_item.html', Object.assign({ link: link }, mod))
+      html.should.containEql("<a href='" + link + "' target=_blank rel='noopener noreferrer'>CBA_A3</a>")
+      html.should.containEql('Update')
+    })
+
+    it('should link mod to Workshop page in server mods', function () {
+      var html = render('servers/mods/available/list_item.html', Object.assign({ link: link, isDisabledButton: function () { return '' } }, mod))
+      html.should.containEql("<a href='" + link + "' target=_blank rel='noopener noreferrer'>CBA_A3</a>")
+    })
+  })
 })

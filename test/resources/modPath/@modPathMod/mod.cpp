@@ -1,1 +1,0 @@
-name = "Mod Path Mod";

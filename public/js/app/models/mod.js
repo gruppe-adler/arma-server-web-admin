@@ -4,7 +4,6 @@ module.exports = Backbone.Model.extend({
   defaults: {
     id: '',
     downloading: false,
-    formattedSize: '',
     name: '',
     needsUpdate: false,
     path: ''
