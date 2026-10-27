@@ -1,3 +1,5 @@
+var fs = require('fs')
+var os = require('os')
 var path = require('path')
 require('should')
 
@@ -65,6 +67,51 @@ describe('SteamMods', function () {
   })
 
   describe('updateMods()', function () {
+    describe('with Creator DLCs', function () {
+      var gamePath
+      var workshopMod = { id: '450814997', name: 'CBA_A3', path: '/steam/450814997' }
+
+      before(function () {
+        gamePath = fs.mkdtempSync(path.join(os.tmpdir(), 'arma-steam-mods-test-'))
+        fs.mkdirSync(path.join(gamePath, 'gm', 'addons'), { recursive: true })
+      })
+
+      after(function () {
+        fs.rmSync(gamePath, { recursive: true, force: true })
+      })
+
+      it('should list Creator DLCs before Workshop mods', function (done) {
+        var steamMods = new SteamMods({ path: gamePath, steam: {} })
+        steamMods.armaSteamWorkshop.mods = function (cb) {
+          cb(null, [workshopMod])
+        }
+        steamMods.on('mods', function (mods) {
+          mods.map(function (mod) {
+            return mod.id
+          }).should.eql(['gm', '450814997'])
+          steamMods.find('gm').should.have.property('cdlc', true)
+          done()
+        })
+        steamMods.updateMods()
+      })
+
+      it('should keep Workshop mods when Steam cannot be reached', function (done) {
+        var steamMods = new SteamMods({ path: gamePath, steam: {} })
+        steamMods.mods = [workshopMod]
+        steamMods.armaSteamWorkshop.mods = function (cb) {
+          cb(new Error('Steam API unavailable'))
+        }
+        steamMods.on('notification', function () {})
+        steamMods.on('mods', function (mods) {
+          mods.map(function (mod) {
+            return mod.id
+          }).should.eql(['gm', '450814997'])
+          done()
+        })
+        steamMods.updateMods()
+      })
+    })
+
     it('should notify when mods cannot be loaded', function (done) {
       var steamMods = new SteamMods({ steam: {} })
       steamMods.armaSteamWorkshop.mods = function (cb) {

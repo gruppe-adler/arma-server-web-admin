@@ -1,8 +1,17 @@
 <td>
-  <a href='<%-link%>' target=_blank rel='noopener noreferrer'><%-name%></a>
+  <% if (link) { %>
+    <a href='<%-link%>' target=_blank rel='noopener noreferrer'><%-name%></a>
+  <% } else { %>
+    <%-name%>
+  <% } %>
+  <% if (cdlc) { %>
+    <span class="label label-default">Creator DLC</span>
+  <% } %>
 </td>
 <td>
-  <% if (downloading) { %>
+  <% if (cdlc) { %>
+    <!-- Creator DLCs are installed with the game -->
+  <% } else if (downloading) { %>
     <div class="progress" style="margin-bottom: 0;">
       <div class="progress-bar progress-bar-striped active" role="progressbar" style="width: 100%"></div>
     </div>

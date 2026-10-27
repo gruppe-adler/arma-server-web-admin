@@ -37,7 +37,7 @@ describe('Templates', function () {
   })
 
   describe('Workshop mods', function () {
-    var mod = { downloading: false, id: '450814997', name: 'CBA_A3', needsUpdate: true, path: '/steam/450814997' }
+    var mod = { cdlc: false, downloading: false, id: '450814997', name: 'CBA_A3', needsUpdate: true, path: '/steam/450814997' }
     var link = 'https://steamcommunity.com/sharedfiles/filedetails/?id=450814997'
 
     it('should link mod to Workshop page in mods list', function () {
@@ -49,6 +49,23 @@ describe('Templates', function () {
     it('should link mod to Workshop page in server mods', function () {
       var html = render('servers/mods/available/list_item.html', Object.assign({ link: link, isDisabledButton: function () { return '' } }, mod))
       html.should.containEql("<a href='" + link + "' target=_blank rel='noopener noreferrer'>CBA_A3</a>")
+    })
+  })
+
+  describe('Creator DLCs', function () {
+    var cdlc = { cdlc: true, downloading: false, id: 'gm', link: null, name: 'Global Mobilization', needsUpdate: false, path: '/arma3/gm' }
+
+    it('should show Creator DLC without Workshop link and buttons in mods list', function () {
+      var html = render('mods/list_item.html', cdlc)
+      html.should.containEql('Global Mobilization')
+      html.should.containEql('Creator DLC')
+      html.should.not.containEql('<a ')
+    })
+
+    it('should allow adding Creator DLC to servers', function () {
+      var html = render('servers/mods/available/list_item.html', Object.assign({ isDisabledButton: function () { return '' } }, cdlc))
+      html.should.containEql('Creator DLC')
+      html.should.containEql('add-mod')
     })
   })
 })

@@ -24,6 +24,10 @@ module.exports = Marionette.ItemView.extend({
   },
 
   templateHelpers: function () {
+    if (this.model.get('cdlc')) {
+      return { link: null }
+    }
+
     return {
       link: 'https://steamcommunity.com/sharedfiles/filedetails/?id=' + encodeURIComponent(this.model.get('id'))
     }

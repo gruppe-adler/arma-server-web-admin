@@ -9,6 +9,10 @@ var modsManager = {
     if (id === '111') {
       return { id: '111', path: path.join(workshopPath, '111') }
     }
+
+    if (id === 'gm') {
+      return { cdlc: true, id: 'gm', path: path.join(path.sep, 'arma3', 'gm') }
+    }
   }
 }
 
@@ -30,6 +34,20 @@ describe('Server', function () {
       var server = new Server(null, null, modsManager, { title: 'test', mods: ['111', 'missing'] })
       server.virtualServerFolder = path.join(path.sep, 'tmp', 'arma-server-test')
       server.getLaunchMods().should.eql(['111'])
+    })
+
+    it('should use Creator DLCs relative to game folder', function () {
+      var server = new Server(null, null, modsManager, { title: 'test', mods: ['gm', '111'] })
+      server.getLaunchMods().should.eql(['gm', path.join(workshopPath, '111')])
+      server.virtualServerFolder = path.join(path.sep, 'tmp', 'arma-server-test')
+      server.getLaunchMods().should.eql(['gm', '111'])
+    })
+  })
+
+  describe('getMods()', function () {
+    it('should only include Workshop mod folders', function () {
+      var server = new Server(null, null, modsManager, { title: 'test', mods: ['gm', '111'] })
+      server.getMods().should.eql([path.join(workshopPath, '111')])
     })
   })
 

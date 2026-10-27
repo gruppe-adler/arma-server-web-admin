@@ -1,5 +1,12 @@
 <td>
-  <a href='<%-link%>' target=_blank rel='noopener noreferrer'><%-name%></a>
+  <% if (link) { %>
+    <a href='<%-link%>' target=_blank rel='noopener noreferrer'><%-name%></a>
+  <% } else { %>
+    <%-name%>
+  <% } %>
+  <% if (cdlc) { %>
+    <span class="label label-default">Creator DLC</span>
+  <% } %>
 </td>
 <td>
   <a class="btn btn-primary btn-xs pull-right add-mod" <%- isDisabledButton() %>>
