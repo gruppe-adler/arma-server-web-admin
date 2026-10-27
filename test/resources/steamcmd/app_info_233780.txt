@@ -1,0 +1,347 @@
+steamcmd.sh[1234]: Starting  /home/user/.config/steamcmd/linux32/steamcmd
+Redirecting stderr to '/home/user/Steam/logs/stderr.txt'
+Logging directory: '/home/user/Steam/logs'
+[  0%] Checking for available updates...
+[----] Verifying installation...
+UpdateUI: skip show logo
+Steam Console Client (c) Valve Corporation - version 1792617903
+-- type 'quit' to exit --
+Loading Steam API...[0mOK
+[0m
+Connecting anonymously to Steam Public...[0mOK
+[0mWaiting for client config...[0mOK
+[0mWaiting for user info...[0mOK
+[0mAppID : 233780, change number : 39823544/39823544, last change : Tue Oct 27 19:52:13 2026 
+"233780"
+{
+	"common"
+	{
+		"name"		"Arma 3 Server"
+		"type"		"Tool"
+		"ReleaseState"		"released"
+		"oslist"		"windows,linux"
+		"parent"		"107410"
+		"logo"		"dbf7763b674955fd374966ba4d4c5e8fc98eaded"
+		"logo_small"		"dbf7763b674955fd374966ba4d4c5e8fc98eaded_thumb"
+		"clienticon"		"65008c45141949621c1485a4099596ee6297476f"
+		"clienttga"		"ab2d0fd9178e03d78524335c74ebcdc2ce37de61"
+		"icon"		"03fac7ea514d12d5abf1526ddec2b363d5f72629"
+		"eulas"
+		{
+			"0"
+			{
+				"id"		"233780_eula_0"
+				"name"		"Arma 3 Server EULA"
+				"url"		"http://store.steampowered.com/eula/233780_eula_0"
+			}
+		}
+		"metacritic_name"		"Arma 3 Server"
+		"small_capsule"
+		{
+			"english"		"capsule_231x87.jpg"
+		}
+		"header_image"
+		{
+			"english"		"header.jpg"
+		}
+		"store_asset_mtime"		"1438284794"
+		"associations"
+		{
+			"0"
+			{
+				"type"		"developer"
+				"name"		"Bohemia Interactive"
+			}
+			"1"
+			{
+				"type"		"publisher"
+				"name"		"Bohemia Interactive"
+			}
+		}
+		"steam_release_date"		"1386795600"
+		"gameid"		"233780"
+	}
+	"extended"
+	{
+		"developer"		"Bohemia Interactive"
+		"developer_url"		"http://www.bistudio.com/"
+		"checkpkgstate"		"1"
+		"gamedir"		"ValveTestApp233780"
+		"homepage"		"http://dev.arma3.com"
+		"icon"		""
+		"noservers"		"0"
+		"sourcegame"		"1"
+		"state"		"eStateComingSoonNoPreload"
+		"visibleonlywhensubscribed"		"1"
+		"publisher"		"Bohemia Interactive"
+	}
+	"config"
+	{
+		"contenttype"		"3"
+		"installdir"		"Arma 3 Server"
+		"launch"
+		{
+			"0"
+			{
+				"executable"		"arma3server_readme.txt"
+				"description"		"Launch Server"
+			}
+		}
+	}
+	"depots"
+	{
+		"overridescddb"		"1"
+		"markdlcdepots"		"1"
+		"233781"
+		{
+			"systemdefined"		"1"
+			"manifests"
+			{
+				"public"
+				{
+					"gid"		"7537897226759777739"
+					"size"		"5181204292"
+					"download"		"2250312816"
+				}
+				"contact"
+				{
+					"gid"		"2197725920086477349"
+					"size"		"5293812693"
+					"download"		"2310899056"
+				}
+				"creatordlc"
+				{
+					"gid"		"7537897226759777739"
+					"size"		"5181204292"
+					"download"		"2250312816"
+				}
+				"profiling"
+				{
+					"gid"		"7537897226759777739"
+					"size"		"5181204292"
+					"download"		"2250312816"
+				}
+			}
+		}
+		"233782"
+		{
+			"config"
+			{
+				"oslist"		"windows"
+			}
+			"manifests"
+			{
+				"public"
+				{
+					"gid"		"7285647294573391363"
+					"size"		"169195324"
+					"download"		"50224160"
+				}
+				"contact"
+				{
+					"gid"		"7654369982664040674"
+					"size"		"169218396"
+					"download"		"50199776"
+				}
+				"creatordlc"
+				{
+					"gid"		"7285647294573391363"
+					"size"		"169195324"
+					"download"		"50224160"
+				}
+				"profiling"
+				{
+					"gid"		"7285647294573391363"
+					"size"		"169195324"
+					"download"		"50224160"
+				}
+			}
+		}
+		"233783"
+		{
+			"config"
+			{
+				"oslist"		"linux"
+			}
+			"manifests"
+			{
+				"public"
+				{
+					"gid"		"1031210325972237925"
+					"size"		"168149156"
+					"download"		"56510208"
+				}
+				"contact"
+				{
+					"gid"		"5278057995012685424"
+					"size"		"168149156"
+					"download"		"56510192"
+				}
+				"creatordlc"
+				{
+					"gid"		"1031210325972237925"
+					"size"		"168149156"
+					"download"		"56510208"
+				}
+				"profiling"
+				{
+					"gid"		"1031210325972237925"
+					"size"		"168149156"
+					"download"		"56510208"
+				}
+			}
+		}
+		"233784"
+		{
+			"config"
+			{
+				"oslist"		"windows"
+			}
+			"manifests"
+			{
+				"profiling"
+				{
+					"gid"		"8524251722824233914"
+					"size"		"74063328"
+					"download"		"29757536"
+				}
+			}
+		}
+		"233785"
+		{
+			"config"
+			{
+				"oslist"		"linux"
+			}
+			"manifests"
+			{
+				"profiling"
+				{
+					"gid"		"5001686124459473372"
+					"size"		"116095520"
+					"download"		"45562816"
+				}
+			}
+		}
+		"233788"
+		{
+			"manifests"
+			{
+				"creatordlc"
+				{
+					"gid"		"8108947832119545069"
+					"size"		"3314678130"
+					"download"		"3327249488"
+				}
+			}
+		}
+		"233792"
+		{
+			"manifests"
+			{
+				"creatordlc"
+				{
+					"gid"		"4293075788436777341"
+					"size"		"4176056129"
+					"download"		"4233196848"
+				}
+			}
+		}
+		"233793"
+		{
+			"manifests"
+			{
+				"creatordlc"
+				{
+					"gid"		"1075735405939243140"
+					"size"		"2662009137"
+					"download"		"2697160064"
+				}
+			}
+		}
+		"233794"
+		{
+			"manifests"
+			{
+				"creatordlc"
+				{
+					"gid"		"318430475440692690"
+					"size"		"5067165606"
+					"download"		"5134175392"
+				}
+			}
+		}
+		"233795"
+		{
+			"manifests"
+			{
+				"creatordlc"
+				{
+					"gid"		"7827299946556555083"
+					"size"		"454955412"
+					"download"		"454992448"
+				}
+			}
+		}
+		"233799"
+		{
+			"manifests"
+			{
+				"creatordlc"
+				{
+					"gid"		"5633863637330265543"
+					"size"		"372617900"
+					"download"		"372647600"
+				}
+			}
+		}
+		"233797"
+		{
+		}
+		"233798"
+		{
+			"manifests"
+			{
+				"creatordlc"
+				{
+					"gid"		"1066497521023429704"
+					"size"		"523464117"
+					"download"		"523508288"
+				}
+			}
+		}
+		"branches"
+		{
+			"public"
+			{
+				"buildid"		"25600558"
+				"timeupdated"		"1790774085"
+				"timebuildupdated"		"1790678924"
+			}
+			"contact"
+			{
+				"buildid"		"25600525"
+				"description"		"Contact Build"
+				"timeupdated"		"1790774519"
+				"timebuildupdated"		"1790678833"
+			}
+			"creatordlc"
+			{
+				"buildid"		"25628655"
+				"description"		"Creator DLC Build"
+				"timeupdated"		"1790774327"
+				"timebuildupdated"		"1790774327"
+			}
+			"profiling"
+			{
+				"buildid"		"25936938"
+				"description"		"Performance Profiling Build"
+				"timeupdated"		"1791990017"
+				"timebuildupdated"		"1791990017"
+			}
+		}
+		"privatebranches"		"1"
+	}
+}
+Unloading Steam API...[0mOK
+[0m

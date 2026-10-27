@@ -9,6 +9,7 @@ const { auth } = require('express-openid-connect')
 
 var config = require('./config')
 var webpackConfig = require('./webpack.config')
+var GameInstaller = require('./lib/game_installer')
 var Manager = require('./lib/manager')
 var Missions = require('./lib/missions')
 var SteamMods = require('./lib/steam_mods')
@@ -39,9 +40,14 @@ app.get('/api/user', function (req, res) {
   const user = req.oidc?.user
   const username = user?.preferred_username || user?.username || user?.name || req.auth?.user || 'Unknown User'
 
+  const roles = req.appSession?.roles || []
+
   res.json({
     username,
-    avatar: user?.picture
+    avatar: user?.picture,
+    permissions: {
+      installGame: !!config.gameInstallRole && roles.includes(config.gameInstallRole)
+    }
   })
 })
 
@@ -56,10 +62,13 @@ manager.load()
 
 var settings = new Settings(config)
 
+var gameInstaller = new GameInstaller(config)
+
 app.use('/api/logs', require('./routes/logs')(logs))
 app.use('/api/missions', require('./routes/missions')(missions))
 app.use('/api/mods', require('./routes/mods')(mods))
-app.use('/api/servers', require('./routes/servers')(manager, mods))
+app.use('/api/game', requiresRole(config.gameInstallRole), require('./routes/game')(gameInstaller, manager))
+app.use('/api/servers', require('./routes/servers')(manager, mods, gameInstaller))
 app.use('/api/settings', require('./routes/settings')(settings))
 
 io.on('connection', function (socket) {
@@ -67,6 +76,7 @@ io.on('connection', function (socket) {
   socket.emit('mods', mods.mods)
   socket.emit('servers', manager.getServers())
   socket.emit('settings', settings.getPublicSettings())
+  socket.emit('gameInstall', gameInstaller.status)
 })
 
 missions.on('missions', function (missions) {
@@ -87,6 +97,11 @@ function sendNotification (notification) {
 
 mods.on('notification', sendNotification)
 manager.on('notification', sendNotification)
+gameInstaller.on('notification', sendNotification)
+
+gameInstaller.on('status', function (status) {
+  io.emit('gameInstall', status)
+})
 
 if (require.main === module) {
   var webpackCompiler = webpack(webpackConfig)

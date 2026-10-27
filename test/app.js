@@ -1,7 +1,10 @@
 const oidc = require('express-openid-connect')
 const request = require('supertest')
+require('should')
 
 const config = require('../config')
+
+config.gameInstallRole = 'game-admin'
 
 function fakeJwt (payload) {
   const encode = (data) => Buffer.from(JSON.stringify(data)).toString('base64url')
@@ -11,11 +14,12 @@ function fakeJwt (payload) {
 // Replace OIDC login with a logged in user that has the required role, avoids talking to Keycloak
 oidc.auth = function () {
   return function (req, res, next) {
+    const roles = req.get('X-Test-Roles') ? req.get('X-Test-Roles').split(',') : [config.requiredRole]
     req.appSession = {}
     req.oidc = {
       user: { preferred_username: 'test' },
       accessToken: {
-        access_token: fakeJwt({ realm_access: { roles: [config.requiredRole] } }),
+        access_token: fakeJwt({ realm_access: { roles } }),
         isExpired: () => false
       }
     }
@@ -61,7 +65,48 @@ describe('App', function () {
   it('should serve user', function (done) {
     request(app)
       .get('/api/user')
-      .expect(200, { username: 'test' })
+      .expect(200, { username: 'test', permissions: { installGame: false } })
       .end(done)
+  })
+
+  describe('game install', function () {
+    const installRoles = [config.requiredRole, config.gameInstallRole].join(',')
+
+    it('should deny users without install role', function (done) {
+      request(app)
+        .get('/api/game')
+        .expect(403)
+        .end(done)
+    })
+
+    it('should allow users with install role', function (done) {
+      request(app)
+        .get('/api/game')
+        .set('X-Test-Roles', installRoles)
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .expect(function (res) {
+          res.body.should.have.property('path', config.path)
+          res.body.status.should.have.property('installing', false)
+        })
+        .end(done)
+    })
+
+    it('should show install permission to users with install role', function (done) {
+      request(app)
+        .get('/api/user')
+        .set('X-Test-Roles', installRoles)
+        .expect(200, { username: 'test', permissions: { installGame: true } })
+        .end(done)
+    })
+
+    it('should reject invalid branch', function (done) {
+      request(app)
+        .post('/api/game/install')
+        .set('X-Test-Roles', installRoles)
+        .send({ branch: 'public +quit' })
+        .expect(400, 'Invalid branch name')
+        .end(done)
+    })
   })
 })

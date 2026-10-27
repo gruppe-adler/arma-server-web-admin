@@ -52,6 +52,7 @@ modsPath | Path where game mods are stored. Leave empty to use game directory
 parameters | Extra startup parameters added to servers and headless clients
 serverMods | Mods that always and only will be used by the game servers
 steam | Steam Workshop settings: `apiKey` for search, `path` to the Steam folder containing `steamapps`, `username` and `password` for downloads
+gameInstallRole | Keycloak realm role allowed to install and update Arma 3 with SteamCMD from the user menu. Disabled if empty
 virtualServer | Start each server from a temporary folder linking the game files, Workshop mods and their keys. Required for Workshop mods on Linux
 auth | If both username and password is set, HTTP Basic Auth will be used
 prefix | Text prepended to all game servers name
@@ -84,9 +85,9 @@ This is easiest solved using `winetricks` by running `winetricks nocrashdialog`.
 It can also be disabled manually.
 [Read more at Wine FAQ](http://wiki.winehq.org/FAQ#head-c857c433cf9fc1dcd90b8369ef75c325483c91d6).
 
-### Steam Workshop
+### SteamCMD
 
-Mods are downloaded with SteamCMD, which is installed automatically on the first download (to `~/.config/steamcmd` on Linux).
+Steam Workshop mods and Arma 3 installs from the user menu use SteamCMD, which is installed automatically on first use (to `~/.config/steamcmd` on Linux).
 SteamCMD is a 32-bit program, on 64-bit Linux it needs the 32-bit C and C++ runtime libraries:
 
 Distribution | Command
@@ -99,6 +100,8 @@ Arch Linux | `sudo pacman -S lib32-gcc-libs` (requires the `multilib` repository
 Without them downloads fail with `linux32/steamcmd: cannot execute: required file not found`.
 
 Arma 3 Workshop mods can only be downloaded by a Steam account that owns Arma 3, set it as `steam.username` and `steam.password`.
+The same account is used to install Arma 3 into `path`, Windows binaries are installed if `type` is `windows` or `wine`.
+Branches published by Steam are listed, private branches (for example `legacy`) can be entered by name together with their password.
 If the account uses Steam Guard, log in once manually so SteamCMD remembers the login: `~/.config/steamcmd/steamcmd.sh +login <username> +quit`.
 
 On Linux, Workshop mods require `virtualServer.enabled`.

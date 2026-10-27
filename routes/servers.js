@@ -1,6 +1,6 @@
 var express = require('express')
 
-module.exports = function (manager, mods) {
+module.exports = function (manager, mods, gameInstaller) {
   var router = express.Router()
 
   router.get('/', function (req, res) {
@@ -40,6 +40,10 @@ module.exports = function (manager, mods) {
   })
 
   router.post('/:server/start', function (req, res) {
+    if (gameInstaller && gameInstaller.status.installing) {
+      return res.status(409).send('Arma 3 is being installed, wait until it is finished')
+    }
+
     var server = manager.getServer(req.params.server)
     server.start()
     res.json({ status: 'ok', pid: server.pid })

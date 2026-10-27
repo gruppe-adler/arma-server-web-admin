@@ -12,6 +12,7 @@ var ModsView = require('app/views/mods/index')
 var ServerView = require('app/views/servers/view')
 var Logs = require('app/collections/logs')
 var Missions = require('app/collections/missions')
+var GameInstall = require('app/models/game_install')
 var Mods = require('app/collections/mods')
 var Settings = require('app/models/settings')
 var Servers = require('app/collections/servers')
@@ -21,6 +22,7 @@ var missions = new Missions()
 var mods = new Mods()
 var settings = new Settings()
 var servers = new Servers()
+var gameInstall = new GameInstall()
 var layoutView = new LayoutView({ el: $body }).render()
 
 module.exports = Backbone.Router.extend({
@@ -34,7 +36,7 @@ module.exports = Backbone.Router.extend({
   },
 
   initialize: function () {
-    layoutView.navigation.show(new NavigationView({ settings: settings, servers: servers }))
+    layoutView.navigation.show(new NavigationView({ gameInstall: gameInstall, settings: settings, servers: servers }))
 
     var initialized = false
 
@@ -58,6 +60,9 @@ module.exports = Backbone.Router.extend({
       settings.set(_settings)
     })
     socket.on('notification', notifications.show)
+    socket.on('gameInstall', function (status) {
+      gameInstall.set(status)
+    })
   },
 
   home: function () {
