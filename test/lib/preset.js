@@ -10,6 +10,9 @@ var modsManager = {
     if (id === '463939057') {
       return { id: '463939057', name: '<script>alert(1)</script>' }
     }
+    if (id === '@ace') {
+      return { id: '@ace', name: 'ACE3', local: true, workshopId: '463939057' }
+    }
   }
 }
 
@@ -39,6 +42,12 @@ describe('preset()', function () {
     html.should.containEql('<tr data-type="DlcContainer">')
     html.should.containEql('<td data-type="DisplayName">Global Mobilization</td>')
     html.should.containEql('https://store.steampowered.com/app/1042220')
+  })
+
+  it('should list local mods with Workshop id from the Arma 3 Launcher', function () {
+    var html = preset({ id: 'main', title: 'Main', mods: ['@ace'] }, modsManager)
+    html.should.containEql('<td data-type="DisplayName">ACE3</td>')
+    html.should.containEql('https://steamcommunity.com/sharedfiles/filedetails/?id=463939057')
   })
 
   it('should skip mods that are neither Workshop mods nor Creator DLCs', function () {

@@ -6,6 +6,10 @@ function invalidId (res, id) {
   res.status(400).send('Invalid Steam Workshop ID: ' + id)
 }
 
+function workshopDisabled (res) {
+  res.status(404).send('Steam Workshop is disabled')
+}
+
 module.exports = function (modsManager) {
   var router = express.Router()
 
@@ -14,6 +18,10 @@ module.exports = function (modsManager) {
   })
 
   router.post('/', function (req, res) {
+    if (!modsManager.download) {
+      return workshopDisabled(res)
+    }
+
     if (!isWorkshopId(req.body.id)) {
       return invalidId(res, req.body.id)
     }
@@ -23,6 +31,10 @@ module.exports = function (modsManager) {
   })
 
   router.put('/:mod', function (req, res) {
+    if (!modsManager.download) {
+      return workshopDisabled(res)
+    }
+
     if (!isWorkshopId(req.params.mod)) {
       return invalidId(res, req.params.mod)
     }
@@ -32,13 +44,9 @@ module.exports = function (modsManager) {
   })
 
   router.delete('/:mod', function (req, res) {
-    if (!isWorkshopId(req.params.mod)) {
-      return invalidId(res, req.params.mod)
-    }
-
     modsManager.delete(req.params.mod, function (err) {
       if (err) {
-        res.status(500).send(err.message || String(err))
+        res.status(err.invalid ? 400 : 500).send(err.message || String(err))
       } else {
         res.status(204).send()
       }
@@ -51,6 +59,10 @@ module.exports = function (modsManager) {
   })
 
   router.post('/search', function (req, res) {
+    if (!modsManager.search) {
+      return workshopDisabled(res)
+    }
+
     var query = req.body.query || ''
     modsManager.search(query, function (err, mods) {
       if (err || !mods) {

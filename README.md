@@ -42,6 +42,7 @@ Key | Description
 --- | ---
 game | Which game server to launch, see above
 path | Folder path to game server
+modsPath | Folder with local mods when Steam Workshop is disabled, absolute or relative to `path`. Defaults to `path`
 port | Web port to use
 host | IP or Hostname to listen on
 type | Which kind of server to use, can be 'linux', 'windows' or 'wine'
@@ -50,7 +51,7 @@ logFormat | ExpressJS/Morgan log format, defaults to `"dev"`
 logStream | ExpressJS/Morgan writable log stream, defaults to `process.stdout`
 parameters | Extra startup parameters added to servers and headless clients
 serverMods | Mods that always and only will be used by the game servers
-steam | Steam Workshop settings: `apiKey` for search, `path` to the Steam folder containing `steamapps`, `username` and `password` for downloads
+steam | Steam Workshop settings: `enabled`, `apiKey` for search, `path` to the Steam folder containing `steamapps`, `username` and `password` for downloads. Without `steam` or with `enabled: false` local mods are used
 gameInstallRole | Keycloak realm role allowed to install and update Arma 3 with SteamCMD from the user menu. Disabled if empty
 gameInstallBranch | Branch preselected when installing Arma 3, defaults to `public`. Private branches are preselected as custom branch name
 virtualServer | Start each server from a temporary folder linking the game files, Workshop mods and their keys. Required for Workshop mods on Linux
@@ -90,6 +91,12 @@ Make sure to disable Wine GUI Crash Dialog or server control will be stuck on a 
 This is easiest solved using `winetricks` by running `winetricks nocrashdialog`.
 It can also be disabled manually.
 [Read more at Wine FAQ](http://wiki.winehq.org/FAQ#head-c857c433cf9fc1dcd90b8369ef75c325483c91d6).
+
+### Local Mods
+
+Steam Workshop and SteamCMD are optional. Without a `steam` config, or with `steam.enabled` set to `false`, the mods list shows the `@mod` folders of the game folder or of `modsPath` together with the installed Creator DLCs.
+Mod names are read from `mod.cpp`, mods installed by the Arma 3 Launcher link to their Workshop page from `meta.cpp`.
+Downloading mods and installing Arma 3 are not available then, local mods can still be deleted.
 
 ### SteamCMD
 

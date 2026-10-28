@@ -91,7 +91,7 @@ module.exports = Backbone.Router.extend({
   },
 
   mods: function () {
-    layoutView.content.show(new ModsView({ mods: mods }))
+    layoutView.content.show(new ModsView({ mods: mods, settings: settings }))
   },
 
   server: function (id) {

@@ -47,19 +47,29 @@ describe('Templates', function () {
     var link = 'https://steamcommunity.com/sharedfiles/filedetails/?id=450814997'
 
     it('should link mod to Workshop page in mods list', function () {
-      var html = render('mods/list_item.html', Object.assign({ link: link }, mod))
+      var html = render('mods/list_item.html', Object.assign({ link: link, folder: null }, mod))
       html.should.containEql("<a href='" + link + "' target=_blank rel='noopener noreferrer'>CBA_A3</a>")
       html.should.containEql('Update')
     })
 
     it('should link mod to Workshop page in server mods', function () {
-      var html = render('servers/mods/available/list_item.html', Object.assign({ link: link, isDisabledButton: function () { return '' } }, mod))
+      var html = render('servers/mods/available/list_item.html', Object.assign({ link: link, folder: null, isDisabledButton: function () { return '' } }, mod))
       html.should.containEql("<a href='" + link + "' target=_blank rel='noopener noreferrer'>CBA_A3</a>")
     })
   })
 
+  describe('Local mods', function () {
+    it('should show folder and only delete button', function () {
+      var html = render('mods/list_item.html', { cdlc: false, downloading: false, folder: '@ace', id: '@ace', link: 'https://steamcommunity.com/sharedfiles/filedetails/?id=463939057', name: 'ACE3', needsUpdate: false })
+      html.should.containEql('>ACE3</a>')
+      html.should.containEql('<small class="text-muted">@ace</small>')
+      html.should.containEql('destroy')
+      html.should.not.containEql('install')
+    })
+  })
+
   describe('Creator DLCs', function () {
-    var cdlc = { cdlc: true, downloading: false, id: 'gm', link: null, name: 'Global Mobilization', needsUpdate: false, path: '/arma3/gm' }
+    var cdlc = { cdlc: true, downloading: false, folder: null, id: 'gm', link: null, name: 'Global Mobilization', needsUpdate: false, path: '/arma3/gm' }
 
     it('should show Creator DLC without Workshop link and buttons in mods list', function () {
       var html = render('mods/list_item.html', cdlc)

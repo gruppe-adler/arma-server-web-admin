@@ -24,12 +24,13 @@ module.exports = Marionette.ItemView.extend({
   },
 
   templateHelpers: function () {
-    if (this.model.get('cdlc')) {
-      return { link: null }
-    }
+    var id = this.model.get('id')
+    var workshopId = this.model.get('workshopId') || (/^\d+$/.test(id) ? id : null)
 
     return {
-      link: 'https://steamcommunity.com/sharedfiles/filedetails/?id=' + encodeURIComponent(this.model.get('id'))
+      // Local mods show their folder when the name comes from mod.cpp
+      folder: this.model.get('local') && this.model.get('name') !== id ? id : null,
+      link: workshopId && !this.model.get('cdlc') ? 'https://steamcommunity.com/sharedfiles/filedetails/?id=' + encodeURIComponent(workshopId) : null
     }
   },
 

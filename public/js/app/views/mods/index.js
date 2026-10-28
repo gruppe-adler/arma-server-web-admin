@@ -14,7 +14,8 @@ module.exports = Marionette.LayoutView.extend({
   template: template,
   templateHelpers: function () {
     return {
-      filterValue: this.filterValue
+      filterValue: this.filterValue,
+      workshop: !!this.options.settings && this.options.settings.get('workshop')
     }
   },
 
@@ -32,6 +33,12 @@ module.exports = Marionette.LayoutView.extend({
   initialize: function () {
     this.filterValue = ''
     this.modsListView = new ListView({ collection: this.options.mods, filterValue: this.filterValue })
+
+    if (this.options.settings) {
+      this.listenTo(this.options.settings, 'change:workshop', function (settings, workshop) {
+        this.$('.workshop-actions').toggle(!!workshop)
+      })
+    }
   },
 
   updateFilter: function (event) {

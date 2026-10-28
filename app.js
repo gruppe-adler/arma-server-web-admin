@@ -12,6 +12,7 @@ var webpackConfig = require('./webpack.config')
 var GameInstaller = require('./lib/game_installer')
 var Manager = require('./lib/manager')
 var Missions = require('./lib/missions')
+var LocalMods = require('./lib/local_mods')
 var SteamMods = require('./lib/steam_mods')
 var Logs = require('./lib/logs')
 var Settings = require('./lib/settings')
@@ -25,7 +26,8 @@ var io = require('socket.io')(server)
 var logs = new Logs(config)
 
 var missions = new Missions(config)
-var mods = new SteamMods(config)
+var workshop = Settings.workshopEnabled(config)
+var mods = workshop ? new SteamMods(config) : new LocalMods(config)
 mods.updateMods()
 
 var manager = new Manager(config, logs, mods)
@@ -63,7 +65,7 @@ app.get('/api/user', function (req, res) {
     username,
     avatar: user?.picture,
     permissions: {
-      installGame: !!config.gameInstallRole && roles.includes(config.gameInstallRole)
+      installGame: workshop && !!config.gameInstallRole && roles.includes(config.gameInstallRole)
     }
   })
 })
@@ -71,18 +73,22 @@ app.get('/api/user', function (req, res) {
 app.use('/api/logs', require('./routes/logs')(logs))
 app.use('/api/missions', require('./routes/missions')(missions))
 app.use('/api/mods', require('./routes/mods')(mods))
-app.use('/api/game', requiresRole(config.gameInstallRole), require('./routes/game')(gameInstaller, manager))
+// Arma 3 installs need SteamCMD, which is only used with Steam Workshop
+if (workshop) {
+  app.use('/api/game', requiresRole(config.gameInstallRole), require('./routes/game')(gameInstaller, manager))
+}
 app.use('/api/servers', require('./routes/servers')(manager, mods, gameInstaller))
 app.use('/api/settings', require('./routes/settings')(settings))
 
 // Live updates contain server passwords, without login redirects as socket.io cannot follow them
 io.use(socketAuth(auth({ ...config.ssoConfig, idpLogout: true, authRequired: false }), config.requiredRole))
 
+// Settings first, the browser starts routing when the servers arrive
 io.on('connection', function (socket) {
+  socket.emit('settings', settings.getPublicSettings())
   socket.emit('missions', missions.missions)
   socket.emit('mods', mods.mods)
   socket.emit('servers', manager.getServers())
-  socket.emit('settings', settings.getPublicSettings())
   socket.emit('gameInstall', gameInstaller.status)
 })
 

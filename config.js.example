@@ -1,6 +1,7 @@
 module.exports = {
   game: 'arma3', // arma3, arma2oa, arma2, arma1, cwa, ofpresistance, ofp
   path: 'path-to-arma3-directory',
+  modsPath: '', // Folder with local mods when Steam Workshop is disabled, defaults to the game folder
   port: 2001,
   host: '0.0.0.0', // Can be either an IP or a Hostname
   type: 'linux', // Can be either linux, windows or wine
@@ -22,6 +23,7 @@ module.exports = {
     ]
   },
   steam: {
+    enabled: true, // Steam Workshop mods and Arma 3 installs with SteamCMD, false to use local mods
     apiKey: '1234567890ABCDE', // https://steamcommunity.com/dev/apikey
     path: 'path-to-main-steam-folder',
     username: 'steam_username',
