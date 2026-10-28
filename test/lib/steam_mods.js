@@ -25,7 +25,7 @@ describe('SteamMods', function () {
   describe('Steam Workshop ids', function () {
     it('should not delete paths outside of Workshop folder', function (done) {
       var steamMods = new SteamMods({ steam: {} })
-      steamMods.armaSteamWorkshop.deleteMod = function () {
+      steamMods.workshop.deleteMod = function () {
         done(new Error('deleteMod should not be called'))
       }
       steamMods.delete('../..', function (err) {
@@ -36,7 +36,7 @@ describe('SteamMods', function () {
 
     it('should not pass invalid ids to SteamCMD', function (done) {
       var steamMods = new SteamMods({ steam: {} })
-      steamMods.armaSteamWorkshop.downloadMod = function () {
+      steamMods.workshop.downloadMod = function () {
         done(new Error('downloadMod should not be called'))
       }
       steamMods.download('1 +quit', function (err) {
@@ -50,10 +50,10 @@ describe('SteamMods', function () {
     it('should notify about failed download', function (done) {
       var steamMods = new SteamMods({ steam: {} })
       steamMods.mods = [{ id: '450814997', name: 'CBA_A3' }]
-      steamMods.armaSteamWorkshop.downloadMod = function (id, cb) {
+      steamMods.workshop.downloadMod = function (id, cb) {
         cb(new Error('steamcmd failed with status code 127'))
       }
-      steamMods.armaSteamWorkshop.mods = function () {}
+      steamMods.workshop.mods = function () {}
       steamMods.on('notification', function (notification) {
         notification.should.eql({
           type: 'error',
@@ -82,7 +82,7 @@ describe('SteamMods', function () {
 
       it('should list Creator DLCs before Workshop mods', function (done) {
         var steamMods = new SteamMods({ path: gamePath, steam: {} })
-        steamMods.armaSteamWorkshop.mods = function (cb) {
+        steamMods.workshop.mods = function (cb) {
           cb(null, [workshopMod])
         }
         steamMods.on('mods', function (mods) {
@@ -98,7 +98,7 @@ describe('SteamMods', function () {
       it('should keep Workshop mods when Steam cannot be reached', function (done) {
         var steamMods = new SteamMods({ path: gamePath, steam: {} })
         steamMods.mods = [workshopMod]
-        steamMods.armaSteamWorkshop.mods = function (cb) {
+        steamMods.workshop.mods = function (cb) {
           cb(new Error('Steam API unavailable'))
         }
         steamMods.on('notification', function () {})
@@ -114,7 +114,7 @@ describe('SteamMods', function () {
 
     it('should notify when mods cannot be loaded', function (done) {
       var steamMods = new SteamMods({ steam: {} })
-      steamMods.armaSteamWorkshop.mods = function (cb) {
+      steamMods.workshop.mods = function (cb) {
         cb(new Error('Steam API unavailable'))
       }
       steamMods.on('notification', function (notification) {
@@ -137,7 +137,7 @@ describe('SteamMods', function () {
 
     it('should list first download while downloading', function (done) {
       var steamMods = new SteamMods({ steam: { path: emptySteamPath } })
-      steamMods.armaSteamWorkshop.currentDownloads['450814997'] = true
+      steamMods.workshop.currentDownloads['450814997'] = true
       steamMods.on('mods', function (mods) {
         mods.should.eql([{ downloading: true, id: '450814997', name: '450814997', needsUpdate: true, path: null }])
         done()

@@ -52,9 +52,45 @@ describe('Missions', function () {
   })
 
   describe('downloadSteamWorkshop()', function () {
+    var originalFetch = global.fetch
+
+    afterEach(function () {
+      global.fetch = originalFetch
+    })
+
+    function workshopItem (filename) {
+      global.fetch = function (url) {
+        if (String(url).indexOf('GetPublishedFileDetails') >= 0) {
+          return Promise.resolve(new Response(JSON.stringify({
+            response: { publishedfiledetails: [{ publishedfileid: '123', filename: filename, file_url: 'https://cdn.example.com/123' }] }
+          })))
+        }
+        return Promise.resolve(new Response('mission data'))
+      }
+    }
+
+    it('should download mission into missions folder', function (done) {
+      workshopItem('mpmissions\\co10_workshop.altis.pbo')
+      missions.downloadSteamWorkshop('123', function (err) {
+        ;(err === null).should.be.true()
+        fs.readFileSync(path.join(gamePath, 'mpmissions', 'co10_workshop.altis.pbo'), 'utf8').should.eql('mission data')
+        done()
+      })
+    })
+
+    it('should keep Workshop file names in missions folder', function (done) {
+      workshopItem('../../escape.pbo')
+      missions.downloadSteamWorkshop('123', function (err) {
+        ;(err === null).should.be.true()
+        fs.existsSync(path.join(gamePath, 'escape.pbo')).should.be.false()
+        fs.existsSync(path.join(gamePath, 'mpmissions', 'escape.pbo')).should.be.true()
+        done()
+      })
+    })
+
     it('should reject invalid Steam Workshop ids', function (done) {
-      missions.steamWorkshop.downloadFile = function () {
-        done(new Error('download should not be called'))
+      global.fetch = function () {
+        done(new Error('Steam should not be asked'))
       }
       missions.downloadSteamWorkshop('../123', function (err) {
         err.message.should.eql('Not a valid Steam Workshop ID: ../123')
