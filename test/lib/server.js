@@ -1,5 +1,7 @@
+var events = require('events')
 var path = require('path')
 require('should')
+var ArmaServer = require('arma-server')
 
 var GameDig = require('gamedig').GameDig
 var Server = require('../../lib/server.js')
@@ -99,6 +101,107 @@ describe('Server', function () {
         done()
       })
       server.queryStatus()
+    })
+  })
+
+  describe('start()', function () {
+    var original = {}
+    var processes
+
+    beforeEach(function () {
+      processes = []
+      ;['armaServerPath', 'writeServerConfig', 'start'].forEach(function (method) {
+        original[method] = ArmaServer.Server.prototype[method]
+      })
+      ArmaServer.Server.prototype.armaServerPath = function () {
+        return '/arma3/arma3server_x64'
+      }
+      ArmaServer.Server.prototype.writeServerConfig = function () {}
+      ArmaServer.Server.prototype.start = function () {
+        var instance = new events.EventEmitter()
+        instance.stdout = new events.EventEmitter()
+        instance.stderr = new events.EventEmitter()
+        instance.pid = 1234
+        instance.kill = function () {
+          instance.emit('close', null, 'SIGTERM')
+        }
+        processes.push(instance)
+        return instance
+      }
+    })
+
+    afterEach(function () {
+      Object.keys(original).forEach(function (method) {
+        ArmaServer.Server.prototype[method] = original[method]
+      })
+    })
+
+    var logs = { logServerProcess: function () {}, cleanupOldLogFiles: function () {} }
+
+    function startServer (notifications) {
+      var server = new Server({ game: 'arma3_x64', type: 'linux', path: '/arma3' }, logs, modsManager, { title: 'test' })
+      server.on('notification', function (notification) {
+        notifications.push(notification)
+      })
+      server.start()
+      return server
+    }
+
+    it('should report missing server executable', function () {
+      var notifications = []
+      startServer(notifications)
+      var error = new Error('spawn /arma3/arma3server_x64 ENOENT')
+      error.code = 'ENOENT'
+      error.path = '/arma3/arma3server_x64'
+      processes[0].emit('error', error)
+      processes[0].emit('close', -2, null)
+      notifications.should.eql([{ type: 'error', title: 'Starting test failed', message: 'Server executable not found: /arma3/arma3server_x64' }])
+    })
+
+    it('should report early exit with last output', function () {
+      var notifications = []
+      var server = startServer(notifications)
+      processes[0].stderr.emit('data', Buffer.from('Loading\n./arma3server_x64: error while loading shared libraries: libSDL2.so\n'))
+      processes[0].emit('close', 127, null)
+      notifications.should.eql([{ type: 'error', title: 'Starting test failed', message: 'Exited with code 127, last output: ./arma3server_x64: error while loading shared libraries: libSDL2.so' }])
+      ;(server.instance === null).should.be.true()
+    })
+
+    it('should report crash of running server', function () {
+      var notifications = []
+      var server = startServer(notifications)
+      server.online = true
+      processes[0].emit('close', null, 'SIGSEGV')
+      notifications.should.eql([{ type: 'error', title: 'test stopped unexpectedly', message: 'Killed by SIGSEGV' }])
+    })
+
+    it('should not report requested stop', function (done) {
+      var notifications = []
+      var server = startServer(notifications)
+      server.stop(function () {
+        notifications.should.eql([])
+        done()
+      })
+    })
+
+    it('should report unknown server executable', function () {
+      ArmaServer.Server.prototype.armaServerPath = function () {
+        return null
+      }
+      var notifications = []
+      var server = startServer(notifications)
+      processes.should.eql([])
+      ;(server.instance === undefined || server.instance === null).should.be.true()
+      notifications.should.eql([{ type: 'error', title: 'Starting test failed', message: 'No server executable known for arma3_x64 on linux' }])
+    })
+
+    it('should report failing server config', function () {
+      ArmaServer.Server.prototype.writeServerConfig = function () {
+        throw new Error("EACCES: permission denied, open '/arma3/server.cfg'")
+      }
+      var notifications = []
+      startServer(notifications)
+      notifications.should.eql([{ type: 'error', title: 'Starting test failed', message: "EACCES: permission denied, open '/arma3/server.cfg'" }])
     })
   })
 
