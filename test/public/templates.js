@@ -15,7 +15,7 @@ describe('Templates', function () {
     var html = render('servers/players.html', {
       state: {},
       players: function () {
-        return [{ name: payload, score: 1 }]
+        return [{ name: payload, raw: { score: 1 } }]
       }
     })
     html.should.not.containEql(payload)
