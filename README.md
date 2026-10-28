@@ -114,21 +114,35 @@ On Linux, Workshop mods require `virtualServer.enabled`.
 
 ## Docker
 
-### Example
+Images are published to `ghcr.io/gruppe-adler/arma-server-web-admin`, tagged by branch, commit and version, `latest` is the default branch.
 
-To host an Arma 3 x64 server with an existing Arma 3 Server install in subfolder `arma3` with persisted profiles in `profiles` and shared network with host,
+The image is based on Docker Hardened Images, building it requires logging in with a Docker Hub account first:
 
 ```sh
-mkdir -p arma3 profiles
-touch servers.json
+docker login dhi.io
+docker build -t arma-server-web-admin .
+```
+
+The GitHub Action needs the repository secrets `DOCKERHUB_USERNAME` and `DOCKERHUB_TOKEN` (a read-only Docker Hub access token) to pull the base images.
+
+### Example
+
+To host an Arma 3 x64 server with an existing Arma 3 Server install in subfolder `arma3` with persisted profiles, SteamCMD and Steam login and shared network with host,
+
+```sh
+mkdir -p arma3 profiles steamcmd steam
+echo '[]' > servers.json
+sudo chown -R 1000:1000 arma3 profiles steamcmd steam servers.json
 docker run \
   --network=host \
   --env GAME_TYPE=arma3_x64 \
   --env GAME_PATH=/arma3 \
   --volume $PWD/arma3:/arma3 \
   --volume $PWD/servers.json:/app/servers.json \
-  --volume $PWD/profiles:"/root/.local/share/Arma 3 - Other Profiles" \
-  dahlgren/arma-server-web-admin
+  --volume $PWD/profiles:"/home/node/.local/share/Arma 3 - Other Profiles" \
+  --volume $PWD/steamcmd:/home/node/.config/steamcmd \
+  --volume $PWD/steam:/home/node/Steam \
+  ghcr.io/gruppe-adler/arma-server-web-admin
 ```
 
 ### Required setup
@@ -136,6 +150,8 @@ docker run \
 Mount a preinstalled Arma server folder to the container, currently only the linux server is supported.
 Set GAME_TYPE to your desired arma server, for example `--env GAME_TYPE=arma3` or `--env GAME_TYPE=arma3_x64`.
 Set GAME_PATH to your mounted volume, for example `--env GAME_PATH=/arma3` and `--volume $PWD/arma3:/arma3`.
+
+The container runs as user `node` with uid 1000, mounted folders and files must be writable by uid 1000.
 
 ### Networking
 Host preferably needs to share network with the container or all game ports used will need to be forwarded to the container.
@@ -154,7 +170,13 @@ For example `--volume $PWD/servers.json:/app/servers.json` to use a file named `
 #### Profiles
 
 If you need to persist the server profiles such as vars file make sure to mount a volume.
-For Arma 3 the default profiles directory will be located at `/root/.local/share/Arma 3 - Other Profiles`
+For Arma 3 the default profiles directory will be located at `/home/node/.local/share/Arma 3 - Other Profiles`
+
+#### SteamCMD and Steam Workshop
+
+SteamCMD is installed on first use to `/home/node/.config/steamcmd` and keeps the Steam login, including Steam Guard, in `/home/node/Steam`.
+Mount both to avoid downloading SteamCMD and logging in again for every new container.
+Mount the folder configured as `steam.path` to keep downloaded Workshop mods.
 
 ### Environment Variables
 
@@ -162,11 +184,11 @@ Key | Description
 --- | ---
 GAME_PATH | Required. Absolute folder path to game server in docker container
 GAME_TYPE | Required. Type of game server, see above
-AUTH_USERNAME | Username used for HTTP Basic Auth
-AUTH_PASSWORD | Password used for HTTP Basic Auth
 SERVER_ADMINS | Steam IDs that should be set as admins
 SERVER_ADDITIONAL_CONFIG | Additional content to add into server.cfg
 SERVER_MODS | Mods to be loaded as server side only mods
 SERVER_PARAMETERS | Additional parameters to pass on server launch
 SERVER_PREFIX | Prefix on all server names
 SERVER_SUFFIX | Suffix on all server names
+
+Keycloak login (`ssoConfig`, `requiredRole`) and the other settings from `config.js.example` are configured in `config.docker.js`.

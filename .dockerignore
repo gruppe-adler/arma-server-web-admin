@@ -1,7 +1,8 @@
 .git
+assets
 config.js
 Dockerfile
 docker-compose.yml
+logfile.txt
 node_modules
-package-lock.json
 servers.json
