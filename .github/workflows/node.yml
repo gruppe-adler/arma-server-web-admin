@@ -48,5 +48,5 @@ jobs:
         env:
           CI: true
 
-      - name: Webpack
-        run: ./node_modules/.bin/webpack
+      - name: Build frontend
+        run: npm run build

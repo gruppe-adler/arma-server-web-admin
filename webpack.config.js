@@ -2,6 +2,8 @@ var path = require('path')
 var webpack = require('webpack')
 
 module.exports = {
+  mode: 'development',
+
   // Entry point for static analyzer
   entry: path.join(__dirname, 'public', 'js', 'app.js'),
 
@@ -21,7 +23,9 @@ module.exports = {
       app: path.join(__dirname, 'public', 'js', 'app'),
       marionette: 'backbone.marionette',
       'sweet-alert': 'sweetalert',
-      tpl: path.join(__dirname, 'public', 'js', 'tpl')
+      tpl: path.join(__dirname, 'public', 'js', 'tpl'),
+      // The ES module build cannot be changed, backbone.bootstrap-modal changes _.templateSettings
+      underscore$: require.resolve('underscore/underscore-umd.js')
     }
   },
 
@@ -35,20 +39,17 @@ module.exports = {
   ],
 
   module: {
-    loaders: [
-      { test: /\.css$/, loaders: ['style-loader', 'css-loader'] },
-      { test: /\.html$/, loaders: ['raw-loader'] },
-      { test: /\.json$/, loaders: ['json-loader'] },
-      { test: /\.png$/, loader: 'url-loader?limit=8192&mimetype=image/png' },
-      { test: /\.jpe?g$/, loader: 'url-loader?limit=8192&mimetype=image/jpg' },
-      { test: /\.gif$/, loader: 'url-loader?limit=8192&mimetype=image/gif' },
-      { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: 'url-loader?limit=8192&mimetype=image/svg+xml' },
-      { test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/, loader: 'url-loader?limit=8192&mimetype=application/font-woff2' },
-      { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/, loader: 'url-loader?limit=8192&mimetype=application/font-woff' },
-      { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, loader: 'url-loader?limit=8192&mimetype=application/octet-stream' },
-      { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: 'file-loader' }
+    rules: [
+      { test: /\.css$/, use: ['style-loader', 'css-loader'] },
+      { test: /\.html$/, type: 'asset/source' },
+      {
+        // Images and fonts up to 8 KB are inlined
+        test: /\.(png|jpe?g|gif|svg|woff2?|ttf|eot)$/,
+        type: 'asset',
+        parser: { dataUrlCondition: { maxSize: 8192 } }
+      }
     ]
   },
 
-  devtool: '#inline-source-map'
+  devtool: 'inline-source-map'
 }
