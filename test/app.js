@@ -143,6 +143,8 @@ describe('App', function () {
       app.server.close(function () {
         done()
       })
+      // socket.io polling leaves keep-alive connections open
+      app.server.closeAllConnections()
     })
 
     function connect (headers) {
@@ -155,9 +157,9 @@ describe('App', function () {
         socket.close()
         done(new Error('servers were sent'))
       })
-      socket.on('error', function (err) {
+      socket.on('connect_error', function (err) {
         socket.close()
-        err.should.eql('Unauthorized')
+        err.message.should.eql('Unauthorized')
         done()
       })
     }
@@ -177,9 +179,9 @@ describe('App', function () {
         servers.should.be.an.Array()
         done()
       })
-      socket.on('error', function (err) {
+      socket.on('connect_error', function (err) {
         socket.close()
-        done(new Error(err))
+        done(err)
       })
     })
   })
